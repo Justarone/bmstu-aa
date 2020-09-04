@@ -24,10 +24,11 @@ fn _recursive(s1: &str, s2: &str, depth: usize) -> (usize, usize) {
     (best_score, max_depth)
 }
 
-pub fn recursive_with_mem(s1: &str, s2: &str) -> (usize, usize) {
+pub fn recursive_with_mem(s1: &str, s2: &str) -> (usize, usize, Vec<Vec<usize>>) {
     let mut matrix = vec![vec![usize::MAX; s1.len() + 1]; s2.len() + 1];
     init_matrix(&mut matrix);
-    _recursive_with_mem(s1, s2, 0, &mut matrix)
+    let res = _recursive_with_mem(s1, s2, 0, &mut matrix);
+    (res.0, res.1, matrix)
 }
 
 fn init_matrix(matrix: &mut [Vec<usize>]) {
@@ -63,7 +64,7 @@ fn _recursive_with_mem(s1: &str, s2: &str, depth: usize, matrix: &mut [Vec<usize
     (best_score, max_depth)
 }
 
-pub fn iterative(s1: &str, s2: &str) -> usize {
+pub fn iterative(s1: &str, s2: &str) -> (usize, Vec<Vec<usize>>) {
     let mut matrix = vec![vec![usize::MAX; s1.len() + 1]; s2.len() + 1];
     init_matrix(&mut matrix);
 
@@ -80,10 +81,10 @@ pub fn iterative(s1: &str, s2: &str) -> usize {
         }
     }
 
-    matrix[s2.len()][s1.len()]
+    (matrix[s2.len()][s1.len()], matrix)
 }
 
-pub fn iterative_dl(s1: &str, s2: &str) -> usize {
+pub fn iterative_dl(s1: &str, s2: &str) -> (usize, Vec<Vec<usize>>) {
     let mut matrix = vec![vec![usize::MAX; s1.len() + 1]; s2.len() + 1];
     init_matrix(&mut matrix);
 
@@ -108,7 +109,7 @@ pub fn iterative_dl(s1: &str, s2: &str) -> usize {
         }
     }
 
-    matrix[s2.len()][s1.len()]
+    (matrix[s2.len()][s1.len()], matrix)
 }
 
 
@@ -125,12 +126,12 @@ mod tests {
         let (score, depth) = recursive(&s1, &s2);
         assert_eq!(score, 2);
         assert_eq!(depth, 9);
-        let (score, depth) = recursive_with_mem(&s1, &s2);
+        let (score, depth, _) = recursive_with_mem(&s1, &s2);
         assert_eq!(score, 2);
         assert_eq!(depth, 9);
-        let score = iterative(&s1, &s2);
+        let (score, _) = iterative(&s1, &s2);
         assert_eq!(score, 2);
-        let score = iterative_dl(&s1, &s2);
+        let (score, _) = iterative_dl(&s1, &s2);
         assert_eq!(score, 2);
     }
 
@@ -141,12 +142,12 @@ mod tests {
         let (score, depth) = recursive(&s1, &s2);
         assert_eq!(score, 2);
         assert_eq!(depth, 7);
-        let (score, depth) = recursive_with_mem(&s1, &s2);
+        let (score, depth, _) = recursive_with_mem(&s1, &s2);
         assert_eq!(score, 2);
         assert_eq!(depth, 7);
-        let score = iterative(&s1, &s2);
+        let (score, _) = iterative(&s1, &s2);
         assert_eq!(score, 2);
-        let score = iterative_dl(&s1, &s2);
+        let (score, _) = iterative_dl(&s1, &s2);
         assert_eq!(score, 2);
     }
 
@@ -157,12 +158,12 @@ mod tests {
         let (score, depth) = recursive(&s1, &s2);
         assert_eq!(score, 3);
         assert_eq!(depth, 12);
-        let (score, depth) = recursive_with_mem(&s1, &s2);
+        let (score, depth, _) = recursive_with_mem(&s1, &s2);
         assert_eq!(score, 3);
         assert_eq!(depth, 12);
-        let score = iterative(&s1, &s2);
+        let (score, _) = iterative(&s1, &s2);
         assert_eq!(score, 3);
-        let score = iterative_dl(&s1, &s2);
+        let (score, _) = iterative_dl(&s1, &s2);
         assert_eq!(score, 3);
     }
 
@@ -173,12 +174,12 @@ mod tests {
         let (score, depth) = recursive(&s1, &s2);
         assert_eq!(score, 4);
         assert_eq!(depth, 15);
-        let (score, depth) = recursive_with_mem(&s1, &s2);
+        let (score, depth, _) = recursive_with_mem(&s1, &s2);
         assert_eq!(score, 4);
         assert_eq!(depth, 15);
-        let score = iterative(&s1, &s2);
+        let (score, _) = iterative(&s1, &s2);
         assert_eq!(score, 4);
-        let score = iterative_dl(&s1, &s2);
+        let (score, _) = iterative_dl(&s1, &s2);
         assert_eq!(score, 2);
     }
 
@@ -189,12 +190,12 @@ mod tests {
         let (score, depth) = recursive(&s1, &s2);
         assert_eq!(score, 2);
         assert_eq!(depth, 13);
-        let (score, depth) = recursive_with_mem(&s1, &s2);
+        let (score, depth, _) = recursive_with_mem(&s1, &s2);
         assert_eq!(score, 2);
         assert_eq!(depth, 13);
-        let score = iterative(&s1, &s2);
+        let (score, _) = iterative(&s1, &s2);
         assert_eq!(score, 2);
-        let score = iterative_dl(&s1, &s2);
+        let (score, _) = iterative_dl(&s1, &s2);
         assert_eq!(score, 2);
     }
 
@@ -205,12 +206,12 @@ mod tests {
         let (score, depth) = recursive(&s1, &s2);
         assert_eq!(score, 5);
         assert_eq!(depth, 14);
-        let (score, depth) = recursive_with_mem(&s1, &s2);
+        let (score, depth, _) = recursive_with_mem(&s1, &s2);
         assert_eq!(score, 5);
         assert_eq!(depth, 14);
-        let score = iterative(&s1, &s2);
+        let (score, _) = iterative(&s1, &s2);
         assert_eq!(score, 5);
-        let score = iterative_dl(&s1, &s2);
+        let (score, _) = iterative_dl(&s1, &s2);
         assert_eq!(score, 5);
     }
 }
