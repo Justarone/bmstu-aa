@@ -17,6 +17,7 @@ static ITERATIVE_DL_ADAPTER: fn(&str, &str) -> usize = |s1: &str, s2: &str| algo
 
 static FUNCS: [fn(&str, &str) -> usize; 4] = [ITERATIVE_ADAPTER, RECURSIVE_ADAPTER, 
 RECURSIVE_WITH_MEM_ADAPTER, ITERATIVE_DL_ADAPTER];
+//static FUNCS: [fn(&str, &str) -> usize; 1] = [RECURSIVE_ADAPTER]; // just recursion
 
 
 pub fn measure_time(s1: &str, s2: &str, z: usize) -> String {
