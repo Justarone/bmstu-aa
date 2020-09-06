@@ -12,6 +12,10 @@ pub fn read_data() -> (String, String) {
     io::stdout().flush().expect("Something went wrong during flushing stdout!");
     io::stdin().read_line(&mut s2).expect("Can't read string!");
 
+    if s1.len() != s1.chars().count() || s2.len() != s2.chars().count() {
+        panic!("Can't work with non-ASCII symbols!");
+    }
+
     (s1, s2)
 }
 
@@ -37,6 +41,8 @@ pub fn count_recursive_with_mem_memory(depth: usize) -> usize {
 }
 
 pub fn print_matrix(matrix: &[Vec<usize>]) {
+    let matrix_size = if matrix.len() == 0 { 0 } else { matrix.len() * matrix[0].len() };
+    println!("Matrix size: {}", matrix_size);
     for i in 0..matrix.len() {
         for j in 0..matrix[0].len() {
             print!("{:4}", matrix[i][j]);

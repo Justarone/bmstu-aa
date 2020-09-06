@@ -37,7 +37,7 @@ pub fn measure_time(s1: &str, s2: &str, z: usize) -> String {
 }
 
 pub fn write_to_file(content: &str, f: &mut BufWriter<File>) {
-    writeln!(f, "{}", content);
+    writeln!(f, "{}", content).expect("Can't write to file!");
 }
 
 pub fn get_z() -> usize {
