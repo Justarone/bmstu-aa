@@ -12,18 +12,18 @@ use super::algorithms;
 
 static DEFAULT_Z: usize = 10;
 
-static RECURSIVE_ADAPTER: fn(&str, &str) -> usize = |s1: &str, s2: &str| algorithms::recursive(s1, s2).0;
-static RECURSIVE_WITH_MEM_ADAPTER: fn(&str, &str) -> usize = 
-    |s1: &str, s2: &str| algorithms::recursive_with_mem(s1, s2).0;
-static ITERATIVE_ADAPTER: fn(&str, &str) -> usize = |s1: &str, s2: &str| algorithms::iterative(s1, s2).0;
-static ITERATIVE_DL_ADAPTER: fn(&str, &str) -> usize = |s1: &str, s2: &str| algorithms::iterative_dl(s1, s2).0;
+static RECURSIVE_ADAPTER: fn(&[char], &[char]) -> usize = |s1: &[char], s2: &[char]| algorithms::recursive(s1, s2).0;
+static RECURSIVE_WITH_MEM_ADAPTER: fn(&[char], &[char]) -> usize = 
+    |s1: &[char], s2: &[char]| algorithms::recursive_with_mem(s1, s2).0;
+static ITERATIVE_ADAPTER: fn(&[char], &[char]) -> usize = |s1: &[char], s2: &[char]| algorithms::iterative(s1, s2).0;
+static ITERATIVE_DL_ADAPTER: fn(&[char], &[char]) -> usize = |s1: &[char], s2: &[char]| algorithms::iterative_dl(s1, s2).0;
 
-static FUNCS: [fn(&str, &str) -> usize; 4] = [ITERATIVE_ADAPTER, RECURSIVE_ADAPTER, 
+static FUNCS: [fn(&[char], &[char]) -> usize; 4] = [ITERATIVE_ADAPTER, RECURSIVE_ADAPTER, 
 RECURSIVE_WITH_MEM_ADAPTER, ITERATIVE_DL_ADAPTER];
 //static FUNCS: [fn(&str, &str) -> usize; 1] = [RECURSIVE_ADAPTER]; // just recursion
 
 
-pub fn measure_time(s1: &str, s2: &str, z: usize) -> String {
+pub fn measure_time(s1: &[char], s2: &[char], z: usize) -> String {
     let mut times = Vec::new();
 
     for &func in FUNCS.iter() {
@@ -51,7 +51,7 @@ pub fn get_z() -> usize {
     }
 }
 
-pub fn generate_string_of_size(size: usize) -> String {
+pub fn generate_string_of_size(size: usize) -> Vec<char> {
     (0..size).map(|_| (0x61u8 + (random::<f32>() * 22.0) as u8) as char).collect()
 }
 

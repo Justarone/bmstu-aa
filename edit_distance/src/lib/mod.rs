@@ -12,25 +12,26 @@ static SIZES_TO_CHECK: [usize; 6] = [10, 20, 30, 50, 100, 200];
 pub fn run_user() {
     let (s1, s2) = user_utils::read_data();
     let (s1, s2) = (s1.trim(), s2.trim());
+    let (s1, s2): (Vec<char>, Vec<char>) = (s1.chars().collect(), s2.chars().collect());
     let time = Instant::now();
-    let (score, depth) = algorithms::recursive(s1, s2);
+    let (score, depth) = algorithms::recursive(&s1, &s2);
     println!("Вызов рекурсивного алгоритма:\nРезультат: {}\nПамять: {}\nВремя выполнения: {} нс",
         score, user_utils::count_recursive_memory(depth), time.elapsed().as_nanos());
 
     let time = Instant::now();
-    let (score, depth, matrix) = algorithms::recursive_with_mem(s1, s2);
+    let (score, depth, matrix) = algorithms::recursive_with_mem(&s1, &s2);
     println!("\nРекурсивный алгоритм с мемоизацией:\nРезультат: {}\nПамять: {}\nВремя выполнения: {} нс",
         score, user_utils::count_recursive_with_mem_memory(depth), time.elapsed().as_nanos());
     user_utils::print_matrix(&matrix);
 
     let time = Instant::now();
-    let (score, matrix) = algorithms::iterative(s1, s2);
+    let (score, matrix) = algorithms::iterative(&s1, &s2);
     println!("\nИтерационный алгоритм:\nРезультат: {}\nВремя выполнения: {} нс",
         score, time.elapsed().as_nanos());
     user_utils::print_matrix(&matrix);
 
     let time = Instant::now();
-    let (score, matrix) = algorithms::iterative_dl(s1, s2);
+    let (score, matrix) = algorithms::iterative_dl(&s1, &s2);
     println!("\nИтерационный алгоритм Дамерау-Левенштейна:\nРезультат: {}\nВремя выполнения: {} нс",
         score, time.elapsed().as_nanos());
     user_utils::print_matrix(&matrix);
