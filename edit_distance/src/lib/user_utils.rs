@@ -4,14 +4,14 @@ use std::mem::size_of;
 
 pub fn read_data() -> (String, String) {
     let mut s1 = String::new();
-    print!("Enter first line: ");
-    io::stdout().flush().expect("Something went wrong during flushing stdout!");
-    io::stdin().read_line(&mut s1).expect("Can't read string!");
+    print!("Введите первую строку: ");
+    io::stdout().flush().expect("Что-то пошло не так при сбрасывании буфера stdout!");
+    io::stdin().read_line(&mut s1).expect("Не удалось прочитать строку!");
 
     let mut s2 = String::new();
-    print!("Enter second line: ");
-    io::stdout().flush().expect("Something went wrong during flushing stdout!");
-    io::stdin().read_line(&mut s2).expect("Can't read string!");
+    print!("Введите вторую строку: ");
+    io::stdout().flush().expect("Что-то пошло не так при сбрасывании буфера stdout!");
+    io::stdin().read_line(&mut s2).expect("Не удалось прочитать строку!");
 
     //if s1.len() != s1.chars().count() || s2.len() != s2.chars().count() {
         //panic!("Can't work with non-ASCII symbols!");
@@ -43,7 +43,7 @@ pub fn count_recursive_with_mem_memory(depth: usize) -> usize {
 
 pub fn print_matrix(matrix: &[Vec<usize>]) {
     let matrix_size = if matrix.len() == 0 { 0 } else { matrix.len() * matrix[0].len() };
-    println!("Matrix size: {}\nSize in bytes: {}", matrix_size, matrix_size * size_of::<usize>());
+    println!("Кол-во элементов в матрице: {}\nРазмер в байтах: {}", matrix_size, matrix_size * size_of::<usize>());
     for i in 0..matrix.len() {
         for j in 0..matrix[0].len() {
             print!("{:4}", matrix[i][j]);

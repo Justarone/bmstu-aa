@@ -14,24 +14,24 @@ pub fn run_user() {
     let (s1, s2) = (s1.trim(), s2.trim());
     let time = Instant::now();
     let (score, depth) = algorithms::recursive(s1, s2);
-    println!("Recursive algorithm call:\nResult: {}\nMemory: {}\nTime: {} nanos",
+    println!("Вызов рекурсивного алгоритма:\nРезультат: {}\nПамять: {}\nВремя выполнения: {} нс",
         score, user_utils::count_recursive_memory(depth), time.elapsed().as_nanos());
 
     let time = Instant::now();
     let (score, depth, matrix) = algorithms::recursive_with_mem(s1, s2);
-    println!("\nRecursive algorithm with memoization call:\nResult: {}\nMemory: {}\nTime: {} nanos",
+    println!("\nРекурсивный алгоритм с мемоизацией:\nРезультат: {}\nПамять: {}\nВремя выполнения: {} нс",
         score, user_utils::count_recursive_with_mem_memory(depth), time.elapsed().as_nanos());
     user_utils::print_matrix(&matrix);
 
     let time = Instant::now();
     let (score, matrix) = algorithms::iterative(s1, s2);
-    println!("\nIterative algorithm call:\nResult: {}\nTime: {} nanos",
+    println!("\nИтерационный алгоритм:\nРезультат: {}\nВремя выполнения: {} нс",
         score, time.elapsed().as_nanos());
     user_utils::print_matrix(&matrix);
 
     let time = Instant::now();
     let (score, matrix) = algorithms::iterative_dl(s1, s2);
-    println!("\nIterative DL algorithm call:\nResult: {}\nTime: {} nanos",
+    println!("\nИтерационный алгоритм Дамерау-Левенштейна:\nРезультат: {}\nВремя выполнения: {} нс",
         score, time.elapsed().as_nanos());
     user_utils::print_matrix(&matrix);
 }
@@ -39,11 +39,11 @@ pub fn run_user() {
 
 pub fn run_tests() {
     let z = test_utils::get_z();
-    let f = File::create("res.txt").expect("Failed to create file!");
+    let f = File::create("res.txt").expect("Не удалось создать файл!");
     let mut f = BufWriter::new(f);
 
     for &size in SIZES_TO_CHECK.iter() {
-        println!("Running for size: {}", size);
+        println!("Подсчет для размера: {}", size);
         let s1 = test_utils::generate_string_of_size(size);
         let s2 = test_utils::generate_string_of_size(size);
 
