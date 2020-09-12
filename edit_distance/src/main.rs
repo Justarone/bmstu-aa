@@ -1,3 +1,5 @@
+#![feature(test)]
+
 use std::env;
 
 mod lib;

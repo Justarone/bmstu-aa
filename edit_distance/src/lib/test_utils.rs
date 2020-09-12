@@ -5,6 +5,9 @@ use std::time::{Instant};
 use std::fs::File;
 use std::io::BufWriter;
 
+extern crate test;
+use test::Bencher;
+
 use super::algorithms;
 
 static DEFAULT_Z: usize = 10;
@@ -52,3 +55,154 @@ pub fn generate_string_of_size(size: usize) -> String {
     (0..size).map(|_| (0x61u8 + (random::<f32>() * 22.0) as u8) as char).collect()
 }
 
+#[cfg(test)]
+mod benchs {
+    use super::*;
+
+    #[bench]
+    fn iterative10(b: &mut Bencher) {
+        let s1 = generate_string_of_size(10);
+        let s2 = generate_string_of_size(10);
+        b.iter(|| algorithms::iterative(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative20(b: &mut Bencher) {
+        let s1 = generate_string_of_size(20);
+        let s2 = generate_string_of_size(20);
+        b.iter(|| algorithms::iterative(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative30(b: &mut Bencher) {
+        let s1 = generate_string_of_size(30);
+        let s2 = generate_string_of_size(30);
+        b.iter(|| algorithms::iterative(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative50(b: &mut Bencher) {
+        let s1 = generate_string_of_size(50);
+        let s2 = generate_string_of_size(50);
+        b.iter(|| algorithms::iterative(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative100(b: &mut Bencher) {
+        let s1 = generate_string_of_size(100);
+        let s2 = generate_string_of_size(100);
+        b.iter(|| algorithms::iterative(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative200(b: &mut Bencher) {
+        let s1 = generate_string_of_size(200);
+        let s2 = generate_string_of_size(200);
+        b.iter(|| algorithms::iterative(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive5(b: &mut Bencher) {
+        let s1 = generate_string_of_size(5);
+        let s2 = generate_string_of_size(5);
+        b.iter(|| algorithms::recursive(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive10(b: &mut Bencher) {
+        let s1 = generate_string_of_size(10);
+        let s2 = generate_string_of_size(10);
+        b.iter(|| algorithms::recursive(&s1, &s2));
+    }
+
+    //#[bench]
+    //fn recursive15(b: &mut Bencher) {
+        //let s1 = generate_string_of_size(15);
+        //let s2 = generate_string_of_size(15);
+        //b.iter(|| algorithms::recursive(&s1, &s2));
+    //}
+
+    #[bench]
+    fn recursive_with_mem10(b: &mut Bencher) {
+        let s1 = generate_string_of_size(10);
+        let s2 = generate_string_of_size(10);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive_with_mem20(b: &mut Bencher) {
+        let s1 = generate_string_of_size(20);
+        let s2 = generate_string_of_size(20);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive_with_mem30(b: &mut Bencher) {
+        let s1 = generate_string_of_size(30);
+        let s2 = generate_string_of_size(30);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive_with_mem50(b: &mut Bencher) {
+        let s1 = generate_string_of_size(50);
+        let s2 = generate_string_of_size(50);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive_with_mem100(b: &mut Bencher) {
+        let s1 = generate_string_of_size(100);
+        let s2 = generate_string_of_size(100);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+
+    #[bench]
+    fn recursive_with_mem200(b: &mut Bencher) {
+        let s1 = generate_string_of_size(200);
+        let s2 = generate_string_of_size(200);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative_dl10(b: &mut Bencher) {
+        let s1 = generate_string_of_size(10);
+        let s2 = generate_string_of_size(10);
+        b.iter(|| algorithms::iterative_dl(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative_dl20(b: &mut Bencher) {
+        let s1 = generate_string_of_size(20);
+        let s2 = generate_string_of_size(20);
+        b.iter(|| algorithms::iterative_dl(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative_dl30(b: &mut Bencher) {
+        let s1 = generate_string_of_size(30);
+        let s2 = generate_string_of_size(30);
+        b.iter(|| algorithms::iterative_dl(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative_dl50(b: &mut Bencher) {
+        let s1 = generate_string_of_size(50);
+        let s2 = generate_string_of_size(50);
+        b.iter(|| algorithms::iterative_dl(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative_dl100(b: &mut Bencher) {
+        let s1 = generate_string_of_size(100);
+        let s2 = generate_string_of_size(100);
+        b.iter(|| algorithms::iterative_dl(&s1, &s2));
+    }
+
+    #[bench]
+    fn iterative_dl200(b: &mut Bencher) {
+        let s1 = generate_string_of_size(200);
+        let s2 = generate_string_of_size(200);
+        b.iter(|| algorithms::recursive_with_mem(&s1, &s2));
+    }
+}
