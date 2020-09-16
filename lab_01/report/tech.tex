@@ -1,0 +1,125 @@
+\chapter{Технологическая часть}
+\section{Выбор ЯП}
+Для реализации программ я выбрал язык программирования Rust, потому что мне нравится его скорость и возможности. среда разработки - Vim с настроенным RLS (Rust Language Server).
+
+\section{Реализация алгоритма}
+
+\begin{lstlisting}[label=some-code,caption=Функция\, реализующая рекурсивный алгоритм нахождения расстояния Левенштейна]
+pub fn recursive(s1: &[char], s2: &[char]) -> (usize, usize) {
+    _recursive(s1, s2, 0)
+}
+
+fn _recursive(s1: &[char], s2: &[char], depth: usize) -> (usize, usize) {
+    if s1.len() == 0 {
+        return (s2.len(), depth);
+    } else if s2.len() == 0 {
+        return (s1.len(), depth);
+    }
+
+    // insertion
+    let (best_score, max_depth) = _recursive(&s1[..(s1.len() - 1)], s2, depth + 1);
+    let best_score = best_score + 1;
+    // deletion
+    let (score, cur_depth) = _recursive(s1, &s2[..(s2.len() - 1)], depth + 1);
+    let (best_score, max_depth) = (min(best_score, score + 1), max(cur_depth, max_depth));
+    // match/replace
+    let (score, cur_depth) = _recursive(&s1[..(s1.len() - 1)], &s2[..(s2.len() - 1)], depth + 1);
+    let score = if s1[s1.len() - 1] == s2[s2.len() - 1] { score } else { score + 1 };
+    let (best_score, max_depth) = (min(best_score, score), max(cur_depth, max_depth));
+    (best_score, max_depth)
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=some-code,caption=Функция инициализации матрицы для алгоритмов с мемоизацией]
+fn init_matrix(matrix: &mut [vec<usize>]) {
+    if matrix.len() == 0 {
+        return;
+    }
+
+    for i in 0..matrix.len() {
+        matrix[i][0] = i;
+    }
+
+    for j in 0..matrix[0].len() {
+        matrix[0][j] = j;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=some-code,caption=Функция\, реализующая рекурсивный алгоритм с мемоизацией нахождения расстояния Левенштейна]
+pub fn recursive_with_mem(s1: &[char], s2: &[char]) -> (usize, usize, vec<vec<usize>>) {
+    let mut matrix = vec![vec![usize::max; s1.len() + 1]; s2.len() + 1];
+    init_matrix(&mut matrix);
+    let res = _recursive_with_mem(s1, s2, 0, &mut matrix);
+    (res.0, res.1, matrix)
+}
+
+fn _recursive_with_mem(s1: &[char], s2: &[char], depth: usize, matrix: &mut [vec<usize>]) -> (usize, usize) {
+    if matrix[s2.len()][s1.len()] != usize::max {
+        return (matrix[s2.len()][s1.len()], depth);
+    }
+
+    // insertion
+    let (best_score, max_depth) = _recursive_with_mem(&s1[..(s1.len() - 1)], &s2, depth + 1, matrix);
+    let best_score = best_score + 1;
+    // deletion
+    let (score, cur_depth) = _recursive_with_mem(&s1, &s2[..(s2.len() - 1)], depth + 1, matrix);
+    let (best_score, max_depth) = (min(best_score, score + 1), max(cur_depth, max_depth));
+    // match/replace
+    let (score, cur_depth) = _recursive_with_mem(&s1[..(s1.len() - 1)], &s2[..(s2.len() - 1)], depth + 1, matrix);
+    let score = if s1[s1.len() - 1] == s2[s2.len() - 1]  { score } else { score + 1 };
+    let (best_score, max_depth) = (min(best_score, score), max(cur_depth, max_depth));
+    matrix[s2.len()][s1.len()] = best_score;
+    (best_score, max_depth)
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=some-code,caption=Функция\, реализующая итеративный алгоритм нахождения расстояния левенштейна]
+pub fn iterative(s1: &[char], s2: &[char]) -> (usize, vec<vec<usize>>) {
+    let mut matrix = vec![vec![usize::max; s1.len() + 1]; s2.len() + 1];
+    init_matrix(&mut matrix);
+
+    for i in 1..(s2.len() + 1) {
+        for j in 1..(s1.len() + 1) {
+            // insertion
+            matrix[i][j] = min(matrix[i][j], matrix[i - 1][j] + 1);
+            // deletion
+            matrix[i][j] = min(matrix[i][j], matrix[i][j - 1] + 1);
+            // match/replace
+            let score = if s1[j - 1] == s2[i - 1] { matrix[i - 1][j - 1] } else { matrix[i - 1][j - 1] + 1 };
+            matrix[i][j] = min(matrix[i][j], score);
+        }
+    }
+
+    (matrix[s2.len()][s1.len()], matrix)
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[label=some-code,caption=Функция\, реализующая итеративный алгоритм нахождения расстояния дамерау-левенштейна]
+pub fn iterative_dl(s1: &[char], s2: &[char]) -> (usize, vec<vec<usize>>) {
+    let mut matrix = vec![vec![usize::max; s1.len() + 1]; s2.len() + 1];
+    init_matrix(&mut matrix);
+
+    for i in 1..(s2.len() + 1) {
+        for j in 1..(s1.len() + 1) {
+            // insertion
+            matrix[i][j] = min(matrix[i][j], matrix[i - 1][j] + 1);
+            // deletion
+            matrix[i][j] = min(matrix[i][j], matrix[i][j - 1] + 1);
+            // match/replace
+            let score = if s1[j - 1] == s2[i - 1] { matrix[i - 1][j - 1] } else { matrix[i - 1][j - 1] + 1 };
+            matrix[i][j] = min(matrix[i][j], score);
+
+            if i > 1 && j > 1 {
+                let transition_condition = s1[j - 1] == s2[i - 2] && s1[j - 2] == s2[i - 1];
+                if transition_condition {
+                    matrix[i][j] = min(matrix[i][j], matrix[i - 2][j - 2] + 1);
+                }
+            }
+        }
+    }
+
+    (matrix[s2.len()][s1.len()], matrix)
+}
+\end{lstlisting}
