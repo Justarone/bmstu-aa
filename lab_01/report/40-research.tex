@@ -1,0 +1,112 @@
+\chapter{Исследовательская часть}
+
+%\section{Пример работы}
+
+%Демонстрация работы программы приведена на рисунке \ref{img:levenshtein_demo}.
+
+%\boximg{160mm}{levenshtein_demo}{Демонстрация работы алгоритмов нахождения расстояния Левенштейна и Дамерау -- Левенштейна}
+
+\section{Технические характеристики}
+
+Технические характеристики устройства, на котором выполнялось тестирование:
+
+\begin{itemize}
+	\item Операционная система: Manjaro \cite{manjaro} Linux \cite{linux} 20.1 64-bit.
+	\item Память: 8 GiB.
+	\item Процессор: Intel® Core™ i7-8550U\cite{intel}.
+\end{itemize}
+
+Тестирование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения, окружением, а также непосредственно системой тестирования.
+
+\section{Время выполнения алгоритмов}
+
+Алгоритмы тестировались при помощи написания <<бенчмарков>> \cite{rusttest}, предоставляемых встроенными в Rust средствами. Такие бенчмарки делают за нас некоторое кол-во размеров, предоставляя затем результат с некоторой погрешностью. Также мною были написаны тесты, прогоняющие алгоритмы $Z$ раз, где $Z$ можно выбирать.
+
+В листинге \ref{lst:bench_example} пример реализации бенчмарка.
+
+\begin{lstinputlisting}[
+	caption={Пример бенчмарка},
+	label={lst:bench_example},
+	style={rust},
+	]{inc/lst/ex.rs}
+\end{lstinputlisting}
+
+Результаты замеров приведены в таблице \ref{tbl:time}. В данной таблице для значений, для которых тестирование не выполнялось, в поле результата находится NaN.
+На рисунках \ref{plt:time_levenshtein} и \ref{plt:time_dl} приведены графики зависимостей времени работы алгоритмов от длины строк.
+
+\begin{table}[h]
+	\begin{center}
+		\caption{Замер времени для строк, размером от 5 до 200}
+		\label{tbl:time}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			                      & \multicolumn{4}{c|}{\bfseries Время, нс}                                    \\ \cline{2-5}
+			\bfseries Длина строк & \bfseries Rec & \bfseries RecMat & \bfseries ItMat & \bfseries DL
+			\csvreader{inc/csv/time.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv&\csvcolv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Длина строк,
+			ylabel={Время, нс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=RecursiveMatrix,col sep=comma] {inc/csv/time_recmat.csv};
+			\addplot table[x=len,y=IterativeMatrix,col sep=comma] {inc/csv/time_itmat.csv};
+			\legend{Рекурсивный с матрицей, Матричный}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритма вычисления расстояния Левенштейна от длины строк (рекурсивная с заполнением матрицы и матричная реализации)}
+	\label{plt:time_levenshtein}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Длина строк,
+			ylabel={Время, нс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=len,y=IterativeMatrix,col sep=comma] {inc/csv/time_itmat.csv};
+			\addplot table[x=len,y=DamerauLevenshtein,col sep=comma] {inc/csv/time_dl.csv};
+			\legend{Левенштейн, Д. — Левенштейн}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы матричных реализаций алгоритмов Левенштейна и Дамерау — Левенштейна}
+	\label{plt:time_dl}
+\end{figure}
+
+\section{Использование памяти}
+
+Алгоритмы Левенштейна и Дамерау — Левенштейна не отличаются друг от друга с точки зрения использования памяти, следовательно, достаточно рассмотреть лишь разницу рекурсивной и матричной реализаций этих алгоритмов.
+
+Максимальная глубина стека вызовов при рекурсивной реализации равна сумме длин входящих строк, соответственно, максимальный расход памяти (\ref{for:99})
+\begin{equation}
+(\mathcal{C}(S_1) + \mathcal{C}(S_2)) \cdot (2 \cdot \mathcal{C}\mathrm{(string)} + 3 \cdot \mathcal{C}\mathrm{(int)}),
+\label{for:99}
+\end{equation}
+где $\mathcal{C}$ — оператор вычисления размера, $S_1$, $S_2$ — строки, $\mathrm{int}$ — целочисленный тип, $\mathrm{string}$ — строковый тип.
+
+Использование памяти при итеративной реализации теоретически равно
+\begin{equation}
+(\mathcal{C}(S_1) + 1) \cdot (\mathcal{C}(S_2) + 1) \cdot \mathcal{C}\mathrm{(int)} + 10\cdot \mathcal{C}\mathrm{(int)} + 2 \cdot \mathcal{C}\mathrm{(string)}.
+\end{equation}
+
+\section*{Вывод}
+
+Рекурсивный алгоритм Левенштейна работает на порядок дольше итеративных реализаций, время его работы увеличивается в геометрической прогрессии. На словах длиной 10 символов, матричная реализация алгоритма Левенштейна превосходит по времени работы рекурсивную на несколько порядков. Рекурсивный алгоритм с заполнением матрицы превосходит простой рекурсивный и сравним по времени работы с матричными алгоритмами. Алгоритм Дамерау — Левенштейна по времени выполнения сопоставим с алгоритмом Левенштейна. В нём добавлены дополнительные проверки, и по сути он является алгоритмом другого смыслового уровня.
+
+Но по расходу памяти итеративные алгоритмы проигрывают рекурсивному: максимальный размер используемой памяти в них растёт как произведение длин строк, в то время как у рекурсивного алгоритма — как сумма длин строк.

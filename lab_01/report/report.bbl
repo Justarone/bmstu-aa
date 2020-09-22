@@ -1,0 +1,50 @@
+\begin{thebibliography}{1}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\language\csname l@#1\endcsname\fi}
+\ifx\undefined\url\def\url#1{{\small #1}}\else\fi
+\ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi
+\ifx\undefined\BibAnnote\long\def\BibAnnote#1{(#1)}\else\fi
+\ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi
+
+\bibitem{Levenshtein}
+\selectlanguageifdefined{russian}
+Левенштейн~В.~И. Двоичные коды с
+  исправлением выпадений, вставок и
+  замещений символов.
+\newblock -- М.: Доклады АН СССР, 1965.
+\newblock Т.~163.
+\newblock {С.}~845--848.
+
+\bibitem{rustlang}
+\selectlanguageifdefined{russian}
+Rust Programming Language [Электронный ресурс].
+\newblock Режим доступа: \url{https://www.rust-lang.org/} (дата
+  обращения: 11.09.2020).
+
+\bibitem{manjaro}
+\selectlanguageifdefined{russian}
+Manjaro -- enjoy the simplicity [Электронный ресурс].
+\newblock Режим доступа: \url{https://manjaro.org/} (дата
+  обращения: 14.09.2020).
+
+\bibitem{linux}
+\selectlanguageifdefined{russian}
+Linux -- Википедия [Электронный ресурс].
+\newblock Режим доступа: \url{https://ru.wikipedia.org/wiki/Linux}
+  (дата обращения: 14.09.2020).
+
+\bibitem{intel}
+\selectlanguageifdefined{russian}
+Процессор Intel® Core™ i7-8550U [Электронный ресурс]
+\newblock Режим доступа:
+  \url{https://ark.intel.com/content/www/ru/ru/ark/products/122589/intel-core-i7-8550u-processor-8m-cache-up-to-4-00-ghz.html} (дата
+  обращения: 14.09.2020).
+
+\bibitem{rusttest}
+\selectlanguageifdefined{russian}
+Документация по ЯП Rust: бенчмарки [Электронный ресурс].
+\newblock Режим доступа: \url{https://doc.rust-lang.org/1.7.0/book/benchmark-tests.html}
+  (дата обращения: 12.09.2020).
+
+\end{thebibliography}
