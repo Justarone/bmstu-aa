@@ -1,0 +1,170 @@
+\chapter{Технологическая часть}
+
+В данном разделе приведены средства реализации и листинг кода.
+
+\section{Требования к ПО}
+
+К программе предъявляется ряд требований:
+\begin{itemize}
+	\item на вход подаются размеры 2 матриц, а также их элементы;
+	\item на выходе — матрица, которая является результатом умножения входных матриц.
+\end{itemize}
+
+\section{Средства реализации}
+
+В качестве языка программирования для реализации данной лабораторной работы был выбран современный компилируемый ЯП Rust \cite{rustlang}. Данный выбор обусловлен моим желанием расширить свои знания в области применения данного языка.
+
+\section{Листинг кода}
+
+В листингах \ref{lst:simple}--\ref{lst:fast_subroutines} приведены реализации алгоритмов умножения матриц, в листингах \ref{lst:tests}--\ref{lst:benches}.
+
+\begin{lstinputlisting}[
+	caption={Стандартный алгоритм умножения матриц},
+	label={lst:simple},
+	style={rustlang},
+	linerange={19-31}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Алгоритм Копперсмита — Винограда},
+	label={lst:vino},
+	style={rustlang},
+	linerange={89-113}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Функции алгоритма Копперсмита — Винограда},
+	label={lst:subroutines},
+	style={rustlang},
+	linerange={33-55}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Оптимизированный алгоритм Копперсмита — Винограда},
+	label={lst:vino_improved},
+	style={rustlang},
+	linerange={115-145}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Функции оптимизированного алгоритма Копперсмита — Винограда},
+	label={lst:fast_subroutines},
+	style={rustlang},
+	linerange={57-79}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Пример написания теста для алгоритмов},
+	label={lst:tests},
+	style={rustlang},
+	linerange={38-42}
+]{../src/lib/algorithms/tests.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Функция run\_check},
+	label={lst:run_check},
+	style={rustlang},
+	linerange={27-36}
+]{../src/lib/algorithms/tests.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Пример написания бенчмарка для алгоритма},
+	label={lst:benches},
+	style={rustlang},
+	linerange={57-61}
+]{../src/lib/algorithms/tests.rs}
+\end{lstinputlisting}
+
+
+\section{Тестирование функций}
+
+В таблице~\ref{tabular:test_rec} приведены тесты для функций, реализующих стандартный алгоритм умножения матриц, алгоритм Винограда и оптимизированный алгоритм Винограда. Тесты пройдены успешно.
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}}
+			\hline
+			Матрица 1 & Матрица 2 &Ожидаемый результат \\ \hline
+			\vspace{4mm}
+			$\begin{pmatrix}
+			1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			6 & 12 & 18\\
+			6 & 12 & 18\\
+			6 & 12 & 18
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+            1 & 2 & 2\\
+            1 & 2 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2\\
+			1 & 2\\
+            1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			5 & 10\\
+			5 & 10
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			4
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & -2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			-1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			0 & 4 & 6\\
+			4 & 12 & 18\\
+			4 & 12 & 18
+			\end{pmatrix}$\\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2
+			\end{pmatrix}$ &
+			Не могут быть перемножены\\
+		\end{tabular}
+	\end{center}
+	\caption{\label{tabular:test_rec} Тестирование функций}
+\end{table}
+
+\section*{Вывод}
+
+Правильный выбор инструментов разработки позволил эффективно реализовать алгоритмы, настроить модульное тестирование и выполнить исследовательский раздел лабораторной работы.

@@ -1,0 +1,92 @@
+\chapter{Исследовательская часть}
+
+\section{Технические характеристики}
+
+\begin{itemize}
+	\item Операционная система: Manjaro \cite{manjaro} Linux \cite{linux} x86\_64.
+	\item Память: 8 GiB.
+	\item Процессор: Intel® Core™ i7-8550U\cite{intel}.
+\end{itemize}
+
+Тестирование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения, окружением, а также непосредственно системой тестирования.
+
+\section{Время выполнения алгоритмов}
+
+Результаты замеров приведены в таблицах \ref{tbl:test_even} и \ref{tbl:test_odd}.
+На рисунках \ref{plt:test_even} и \ref{plt:test_odd} приведены графики зависимостей времени работы алгоритмов от размеров матриц. Здесь и далее: С — стандартный алгоритм, КВ — алгоритм Копперсмита — Винограда, УКВ — улучшенный алгоритм Копперсмита — Винограда.
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			                         & \multicolumn{3}{c|}{\bfseries Время, мс}      \\ \cline{2-4}
+			\bfseries Размер матрицы & \bfseries С & \bfseries КВ & \bfseries УКВ
+			\csvreader{assets/csv/test-even.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Время работы алгоритмов при чётных размерах матриц}
+	\label{tbl:test_even}
+\end{table}
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			                         & \multicolumn{3}{c|}{\bfseries Время, мс}      \\ \cline{2-4}
+			\bfseries Размер матрицы & \bfseries С & \bfseries КВ & \bfseries УКВ
+			\csvreader{assets/csv/test-odd.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Время работы алгоритмов при нечётных размерах матриц}
+	\label{tbl:test_odd}
+\end{table}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Размер,
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=size,y=product,col sep=comma]{assets/csv/test-even.csv};
+			\addplot table[x=size,y=bad_winograd,col sep=comma]{assets/csv/test-even.csv};
+			\addplot table[x=size,y=good_winograd,col sep=comma]{assets/csv/test-even.csv};
+			\legend{С, КВ, УКВ}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритма от размера квадратной матрицы (чётного)}
+	\label{plt:test_even}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Размер,
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=size,y=product,col sep=comma]{assets/csv/test-odd.csv};
+			\addplot table[x=size,y=bad_winograd,col sep=comma]{assets/csv/test-odd.csv};
+			\addplot table[x=size,y=good_winograd,col sep=comma]{assets/csv/test-odd.csv};
+			\legend{С, КВ, УКВ}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритма от размера квадратной матрицы (нечётного)}
+	\label{plt:test_odd}
+\end{figure}
+
+\section*{Вывод}
+
+Время работы алгоритма Винограда незначительно меньше стандартного алгоритма умножения, однако оптимизированная реализации имеет заметный прирост в скорости работы, на матрицах размером 1000х1000 уже около 18\%.
