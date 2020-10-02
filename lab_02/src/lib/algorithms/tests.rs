@@ -9,10 +9,10 @@ const S2: usize = 21;
 const S3: usize = 31;
 const S: usize = 21;
 
-const T1: usize = 20;
-const T2: usize = 50;
-const T3: usize = 100;
-const T4: usize = 200;
+const T1: usize = 101;
+const T2: usize = 201;
+const T3: usize = 301;
+const T4: usize = 401;
 
 
 fn create_square_pair_matrices(s: usize, elem_by_indeces: fn(usize, usize) -> MatInner) -> Vec<Vec<Vec<MatInner>>> {
