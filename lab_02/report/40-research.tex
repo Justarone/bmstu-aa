@@ -19,7 +19,7 @@
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|}
 			\hline
-			                         & \multicolumn{3}{c|}{\bfseries Время, мс}      \\ \cline{2-4}
+			                         & \multicolumn{3}{c|}{\bfseries Время, нс}      \\ \cline{2-4}
 			\bfseries Размер матрицы & \bfseries С & \bfseries КВ & \bfseries УКВ
 			\csvreader{assets/csv/test-even.csv}{}
 			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
@@ -34,7 +34,7 @@
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|}
 			\hline
-			                         & \multicolumn{3}{c|}{\bfseries Время, мс}      \\ \cline{2-4}
+			                         & \multicolumn{3}{c|}{\bfseries Время, нс}      \\ \cline{2-4}
 			\bfseries Размер матрицы & \bfseries С & \bfseries КВ & \bfseries УКВ
 			\csvreader{assets/csv/test-odd.csv}{}
 			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
@@ -62,7 +62,7 @@
 		\end{axis}
 	\end{tikzpicture}
 	\captionsetup{justification=centering}
-	\caption{Зависимость времени работы алгоритма от размера квадратной матрицы (чётного)}
+	\caption{Зависимость времени работы алгоритма от чётного размера квадратной матрицы}
 	\label{plt:test_even}
 \end{figure}
 
@@ -83,10 +83,10 @@
 		\end{axis}
 	\end{tikzpicture}
 	\captionsetup{justification=centering}
-	\caption{Зависимость времени работы алгоритма от размера квадратной матрицы (нечётного)}
+	\caption{Зависимость времени работы алгоритма от нечётного размера квадратной матрицы}
 	\label{plt:test_odd}
 \end{figure}
 
 \section*{Вывод}
 
-Время работы алгоритма Винограда незначительно меньше стандартного алгоритма умножения, однако оптимизированная реализации имеет заметный прирост в скорости работы, на матрицах размером 1000х1000 уже около 18\%.
+Время работы алгоритма Винограда незначительно меньше стандартного алгоритма умножения, однако при размере $800 \times 800$ время вычислений алгоритма Винограда на 0.3 секунды меньше, нежели у стандартного алгоритма (что составляет в данном случае примерно 10\%).
