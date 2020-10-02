@@ -116,18 +116,16 @@ pub fn vinograd_improved(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> Vec<Vec<
     let mut matrix = get_result_matrix(m1, m2);
     let precomputed = precompute_values_fast(m1, m2);
 
-    let mut ind;
     let m = matrix.len();
     let n = matrix[0].len();
-    let k_iteration = m2.len() >> 1;
+    let k_iteration = m2.len();
 
     for i in 0..m {
         for j in 0..n {
 
             matrix[i][j] = precomputed.0[i] + precomputed.1[j];
-            for k in 0..k_iteration {
-                ind = k << 1;
-                matrix[i][j] += (m1[i][ind] + m2[ind + 1][j]) * (m1[i][ind + 1] + m2[ind][j]);
+            for k in (0..(k_iteration - 1)).step_by(2) {
+                matrix[i][j] += (m1[i][k] + m2[k + 1][j]) * (m1[i][k + 1] + m2[k][j]);
             }
 
         }
