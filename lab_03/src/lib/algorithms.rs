@@ -27,7 +27,7 @@ pub fn selection_sort<T: Ord + Clone>(arr: &mut [T]) {
         let mut min_elem = arr[i].clone();
         let mut min_index = i;
 
-        for j in (i + 1)..(arr.len()) {
+        for j in (i + 1)..arr.len() {
             if arr[j] < min_elem {
                 min_elem = arr[j].clone();
                 min_index = j;
