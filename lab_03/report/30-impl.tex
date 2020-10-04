@@ -1,0 +1,84 @@
+\chapter{Технологическая часть}
+
+В данном разделе приведены средства реализации и листинг кода.
+
+\section{Требования к ПО}
+
+К программе предъявляется ряд требований:
+\begin{itemize}
+	\item на вход подаётся массив сравнимых элементов;
+	\item на выходе — тот же массив, но отсортированный в порядке, заданным функцией сравнения.
+\end{itemize}
+
+\section{Средства реализации}
+
+В качестве языка программирования для реализации данной лабораторной работы был выбран современный компилируемый ЯП Rust \cite{rustlang}. Данный выбор обусловлен моим желанием расширить свои знания в области применения данного языка, а также тем, что данный язык предоставляет широкие возможности для написания тестов \cite{rusttest}.
+
+\section{Листинг кода}
+
+В листингах \ref{lst:bubble} -- \ref{lst:selection} приведены листинги алгоритма сортировки пузырьком, вставками и выбором соответственно. В листингах \ref{lst:tests} -- \ref{lst:benches} приведены примеры реализации тестов и бенчмарков.
+
+\begin{lstinputlisting}[
+	caption={Алгоритм сортировки пузырьком},
+	label={lst:bubble},
+	style={rust},
+	linerange={7-19}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Алгоритм сортировки вставками},
+	label={lst:insertions},
+	style={rust},
+	linerange={41-51}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Алгоритм сортировки выбором},
+	label={lst:selection},
+	style={rust},
+	linerange={21-39}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Пример реализации теста},
+	label={lst:tests},
+	style={rust},
+	linerange={33-42}
+]{../src/lib/algorithms/tests.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Пример реализации бенчмарка},
+	label={lst:benches},
+	style={rust},
+	linerange={57-62}
+]{../src/lib/algorithms/tests.rs}
+\end{lstinputlisting}
+
+\section{Тестирование функций}
+
+В таблице~\ref{tbl:test} приведены тесты для функций, реализующих алгоритмы сортировки. Тесты пройдены успешно.
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Входной массив & Результат & Ожидаемый результат \\ 
+			\hline
+			$[1,2,3,4]$ & $[1,2,3,4]$  & $[1,2,3,4]$\\
+			$[3,2,1]$  & $[1,2,3]$ & $[1,2,3]$\\
+			$[5,6,2,4,-2]$  & $[-2,2,4,5,6]$  & $[-2,2,4,5,6]$\\
+			$[4]$  & $[4]$  & $[4]$\\
+			$[]$  & $[]$  & $[]$\\
+			\hline
+		\end{tabular}
+		\caption{\label{tbl:test}Тестирование функций}
+	\end{center}
+\end{table}
+
+\section*{Вывод}
+
+Правильный выбор инструментов разработки позволил эффективно реализовать алгоритмы, настроить модульное тестирование и выполнить исследовательский раздел лабораторной работы.

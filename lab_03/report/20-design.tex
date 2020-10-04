@@ -1,0 +1,123 @@
+\chapter{Конструкторская часть}
+
+\section{Разработка алгоритмов}
+
+На рисунках \ref{img:bubble}, \ref{img:selection} и \ref{img:insertions} представлены схемы алгоритмов сортировки пузырьком, выбором и вставками соответственно.
+
+\img{170mm}{bubble}{Схема алгоритма сортировки пузырьком}
+\img{170mm}{selection}{Схема алгоритма сортировки выбором}
+\clearpage
+\img{170mm}{insertions}{Схема алгоритма сортировки вставками}
+
+\section{Модель вычислений}
+
+Для последующего вычисления трудоемкости необходимо ввести модель вычислений:
+\begin{enumerate}
+    \item операции из списка (\ref{for:opers}) имеют трудоемкость 1;
+        \begin{equation}
+            \label{for:opers}
+            +, -, /, \%, ==, !=, <, >, <=, >=, [], ++, {-}-
+        \end{equation}
+    \item трудоемкость оператора выбора \code{if условие then A else B} рассчитывается, как (\ref{for:if});
+	\begin{equation}
+        \label{for:if}
+        f_{if} = f_{\text{условия}} +
+        \begin{cases}
+        f_A, & \text{если условие выполняется,}\\
+        f_B, & \text{иначе.}
+        \end{cases}
+	\end{equation}
+\item трудоемкость цикла рассчитывается, как (\ref{for:for});
+    \begin{equation}
+        \label{for:for}
+        f_{for} = f_{\text{инициализации}} + f_{\text{сравнения}} + N(f_{\text{тела}} + f_{\text{инкремента}} + f_{\text{сравнения}})
+    \end{equation}
+	\item трудоемкость вызова функции равна 0.
+\end{enumerate}
+
+
+\section{Трудоёмкость алгоритмов}
+
+Обозначим во всех последующих вычислениях размер массивов как N.
+
+\subsection{Алгоритм сортировки пузырьком}
+
+Трудоёмкость алгоритма сортировки пузырьком состоит из:
+\begin{itemize}
+    \item Трудоёмкость сравнения и инкремента внешнего цикла по $i \in [1..N)$, которая равна (\ref{for:bubble_outer}):
+        \begin{equation}
+            \label{for:bubble_outer}
+            f_{outer} = 2 + 2(N - 1)
+        \end{equation}
+    \item Суммарная трудоёмкость внутренних циклов, количество итераций которых меняется в промежутке $[1..N-1]$, которая равна (\ref{for:bubble_inner}):
+        \begin{equation}
+            \label{for:bubble_inner}
+            f_{inner} = 3(N - 1) + \frac{N \cdot (N - 1)}{2} \cdot (3 + f_{if})
+        \end{equation}
+    \item Трудоёмкость условия во внутреннем цикле, которая равна (\ref{for:bubble_if}):
+        \begin{equation}
+            \label{for:bubble_if}
+            f_{if} = 4 + \begin{cases}
+                0, & \text{л.с.}\\
+                9, & \text{х.с.}\\
+            \end{cases}
+        \end{equation}
+\end{itemize}
+
+Трудоёмкость в лучшем случае (\ref{for:bubble_best}):
+\begin{equation}
+    \label{for:bubble_best}
+    f_{best} = -3 + \frac{3}{2} N + \frac{7}{2} N^2 \approx \frac{7}{2} N^2 = O(N^2)
+\end{equation}
+
+Трудоёмкость в худшем случае (\ref{for:bubble_worst}):
+\begin{equation}
+    \label{for:bubble_worst}
+    f_{worst} = -3 - 8N + 8N^2 \approx 8N^2 = O(N^2)
+\end{equation}
+
+\subsection{Алгоритм сортировки выбором}
+
+Трудоёмкость алгоритма сортировки выбором состоит из:
+\begin{itemize}
+    \item Трудоёмкость сравнения, инкремента внешнего цикла, а также зависимых только от него операций, по $i \in [1..N)$, которая равна (\ref{for:selection_outer}):
+        \begin{equation}
+            \label{for:selection_outer}
+            f_{outer} = 2 + 12(N - 1)
+        \end{equation}
+    \item Суммарная трудоёмкость внутренних циклов, количество итераций которых меняется в промежутке $[1..N-1]$, которая равна (\ref{for:selection_inner}):
+        \begin{equation}
+            \label{for:selection_inner}
+            f_{inner} = 2(N - 1) + \frac{N \cdot (N - 1)}{2} \cdot f_{if}
+        \end{equation}
+    \item Трудоёмкость условия во внутреннем цикле, которая равна (\ref{for:selection_if}):
+        \begin{equation}
+            \label{for:selection_if}
+            f_{if} = 3 + \begin{cases}
+                0, & \text{л.с.}\\
+                3, & \text{х.с.}\\
+            \end{cases}
+        \end{equation}
+\end{itemize}
+
+Трудоёмкость в лучшем случае (\ref{for:selection_best}):
+\begin{equation}
+    \label{for:selection_best}
+    f_{best} = -12 + 12.5N + \frac{3}{2}N^2 \approx \frac{3}{2}N = O(N^2)
+\end{equation}
+
+Трудоёмкость в худшем случае (\ref{for:selection_worst}):
+\begin{equation}
+    \label{for:selection_worst}
+    f_{worst} = -12 + 11N + 3N^2 \approx 3N^2 = O(N^2)
+\end{equation}
+
+
+\subsection{Алгоритм сортировки вставками}
+
+Трудоёмкость сортировки вставками может быть рассчитана таким же образом, что и трудоёмкости алгоритмов выше. Ассимптотическая трудоёмкость алгоритма сортировки вставками $O(N^2)$ в худшем случае и $O(N)$ --- в лучшем.
+
+\section*{Вывод}
+
+Были разработаны схемы всех трех алгоритмов сортировки.
+Для каждого из них были рассчитаны и оценены лучшие и худшие случаи.

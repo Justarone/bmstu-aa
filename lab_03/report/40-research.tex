@@ -1,0 +1,132 @@
+\chapter{Исследовательская часть}
+
+\section{Технические характеристики}
+
+\begin{itemize}
+	\item Операционная система: Manjaro \cite{manjaro} Linux \cite{linux} x86\_64.
+	\item Память: 8 GiB.
+	\item Процессор: Intel® Core™ i7-8550U\cite{intel}.
+\end{itemize}
+
+Тестирование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения, окружением, а также непосредственно системой тестирования.
+
+\section{Время выполнения алгоритмов}
+
+Результаты замеров приведены в таблицах \ref{tbl:sorted}, \ref{tbl:reversed} и \ref{tbl:random}.
+На рисунках \ref{plt:sorted}, \ref{plt:reversed} и \ref{plt:random} приведены графики зависимостей времени работы алгоритмов сортировки от размеров массивов на отсортированных, обратно отсортированных и случайных данных.
+\clearpage
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			                 & \multicolumn{3}{c|}{\bfseries Время сортировки, мс}           \\ \cline{2-4}
+			\bfseries Размер & \bfseries Пузырьком & \bfseries Вставками & \bfseries Выбором
+			\csvreader{assets/csv/sorted.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Время работы алгоритмов сортировки на отсортированных данных}
+	\label{tbl:sorted}
+\end{table}
+
+\begin{figure}[h!]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Размер,
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=size,y=bubble,col sep=comma]{assets/csv/sorted.csv};
+			\addplot table[x=size,y=insertion,col sep=comma]{assets/csv/sorted.csv};
+			\addplot table[x=size,y=selection,col sep=comma]{assets/csv/sorted.csv};
+			\legend{Пузырьком, Вставками, Выбором}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритма сортировки от размера отсортированного массива}
+	\label{plt:sorted}
+\end{figure}
+\clearpage
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			                 & \multicolumn{3}{c|}{\bfseries Время сортировки, мс}           \\ \cline{2-4}
+			\bfseries Размер & \bfseries Пузырьком & \bfseries Вставками & \bfseries Выбором
+			\csvreader{assets/csv/reversed.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Время работы алгоритмов сортировки на обратно отсортированных данных}
+	\label{tbl:reversed}
+\end{table}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Размер,
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=size,y=bubble,col sep=comma]{assets/csv/reversed.csv};
+			\addplot table[x=size,y=insertion,col sep=comma]{assets/csv/reversed.csv};
+			\addplot table[x=size,y=selection,col sep=comma]{assets/csv/reversed.csv};
+			\legend{Пузырьком, Вставками, Выбором}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритма сортировки от размера массива, отсортированного в обратном порядке}
+	\label{plt:reversed}
+\end{figure}
+\clearpage
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			                 & \multicolumn{3}{c|}{\bfseries Время сортировки, мс}           \\ \cline{2-4}
+			\bfseries Размер & \bfseries Пузырьком & \bfseries Вставками & \bfseries Выбором
+			\csvreader{assets/csv/random.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Время работы алгоритмов сортировки на случайных данных}
+	\label{tbl:random}
+\end{table}
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Размер,
+			ylabel={Время, мс},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=size,y=bubble,col sep=comma]{assets/csv/random.csv};
+			\addplot table[x=size,y=insertion,col sep=comma]{assets/csv/random.csv};
+			\addplot table[x=size,y=selection,col sep=comma]{assets/csv/random.csv};
+			\legend{Пузырьком, Вставками, Выбором}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритма сортировки от размера случайного массива}
+	\label{plt:random}
+\end{figure}
+\clearpage
+
+\section*{Вывод}
+
+Алгоритм сортировки вставками работает лучше остальных двух на случайных числах и уже отсортированных, практический интерес, конечно, представляет лишь первый случай, на котором сортировка вставками почти стабильно быстрее других рассматриваемых алгоритмов. Например, на массиве в 5000 элементов сортировка вставками выигрывает по времени на случайных данных пузырьковую сортировку на $66\%$, выбором — на $12\%$.
