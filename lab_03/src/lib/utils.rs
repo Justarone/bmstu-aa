@@ -6,6 +6,8 @@ use rand::Rng;
 
 const DEFAULT_ITERS: usize = 100;
 const DEFAULT_SIZE: usize = 100;
+//const SIZE_OF_ARR: usize = 3;
+//const ARR_WITH_ELEMS: [VecInner; SIZE_OF_ARR] = [1, 100, -5];
 
 pub fn read_data() -> Vec<VecInner> {
     let mut array = String::new();
@@ -36,8 +38,11 @@ pub fn measure(n: usize, size: usize) {
     println!("Производится {} замеров для массивов размера {}", n, size);
     let mut rng = rand::thread_rng();
 
+    //let arr: Vec<_> = (0..size).map(|_| ARR_WITH_ELEMS[rng.gen::<usize>() % SIZE_OF_ARR]).collect();
+    //println!("{:?}", arr);
+    let arr: Vec<_> = (0..size).map(|_| rng.gen()).collect();
+
     for (algorithm, description) in SORTS_ARRAY.iter().zip(SORTS_DESCRIPTIONS.iter()) {
-        let arr: Vec<_> = (0..size).map(|_| rng.gen()).collect();
 
         let time = Instant::now();
         for _ in 0..n {
