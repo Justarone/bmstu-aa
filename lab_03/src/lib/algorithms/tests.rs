@@ -5,13 +5,13 @@ extern crate test;
 use test::Bencher;
 
 const T1: usize = 100;
-const T2: usize = 5000;
-const T3: usize = 10000;
+const T2: usize = 200;
+const T3: usize = 300;
 
 fn generate_arr(from: usize, to: usize) -> Vec<VecInner> {
-    //let mut rng = rand::thread_rng();
-    //(from..to).map(|_| rng.gen()).collect()
-    ((from as i64)..(to as i64)).rev().collect()
+    let mut rng = rand::thread_rng();
+    (from..to).map(|_| rng.gen()).collect()
+    //((from as i64)..(to as i64)).rev().collect()
 }
 
 #[test]
