@@ -141,25 +141,52 @@ pub fn multiplication_in_range(precomputed: &(Vec<MatInner>, Vec<MatInner>),
 
 pub fn precompute_values_parallel(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> (Vec<MatInner>, Vec<MatInner>) {
     cthread::scope(move |s| {
-        let nofth = NUMBER_OF_THREADS1 - 3;
+        let nofth = NUMBER_OF_THREADS1 - 2;
 
         let t1 = s.spawn(move |_| precompute_rows_parallel(&m1, nofth / 2));
-        let t2 = s.spawn(move |_| precompute_cols_parallel(&m2, nofth / 2 + nofth & 1));
+        let p2 = precompute_cols_parallel(&m2, nofth / 2 + nofth & 1);
 
-        (t1.join().unwrap(), t2.join().unwrap())
+        let p1 = t1.join().unwrap();
+        (p1, p2)
     }).unwrap()
 }
 
-pub fn odd_mult_parallel(mut matrix: Vec<Vec<MatInner>>, m1: &[Vec<MatInner>],
-    m2: &[Vec<MatInner>], _nofth: usize) -> Vec<Vec<MatInner>> {
-    let max_k = m2.len() - 1;
+pub fn _odd_mult_parallel(matrix: Vec<Vec<MatInner>>, m1: &[Vec<MatInner>],
+    m2: &[Vec<MatInner>], nofth: usize) -> Vec<Vec<MatInner>> {
+    cthread::scope(move |s| {
+        let mut threads = Vec::with_capacity(nofth);
 
-    for i in 0..m1.len() {
-        for j in 0..matrix[0].len() {
-            matrix[i][j] += m1[i][max_k] * m2[max_k][j];
+        let size = matrix.len() / (nofth + 1);
+        let matrix_guard = Arc::new(Mutex::new(matrix));
+
+        for i in 0..nofth {
+            let range = (i * size)..((i + 1) * size);
+            let guard_copy = matrix_guard.clone();
+            threads.push(s.spawn(move |_| _odd_mult_in_range(guard_copy, &m1, &m2, range)));
         }
-    }
 
-    matrix
+        let range = (nofth * size)..m1.len();
+        let guard_copy = matrix_guard.clone();
+        _odd_mult_in_range(guard_copy, &m1, &m2, range);
+
+        for th in threads {
+            th.join().unwrap();
+        }
+
+        let matrix = Arc::try_unwrap(matrix_guard).unwrap().into_inner().unwrap();
+        matrix
+    }).unwrap()
 }
 
+fn _odd_mult_in_range(matrix_guard: Arc<Mutex<Vec<Vec<MatInner>>>>, m1: &[Vec<MatInner>],
+    m2: &[Vec<MatInner>], range: std::ops::Range<usize>) {
+    let max_k = m2.len() - 1;
+
+    for i in range {
+        for j in 0..m2[0].len() {
+            let buf = m1[i][max_k] * m2[max_k][j];
+            let mut matrix = matrix_guard.lock().unwrap();
+            matrix[i][j] += buf;
+        }
+    }
+}

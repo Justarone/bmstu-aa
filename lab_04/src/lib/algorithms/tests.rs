@@ -136,5 +136,3 @@ fn bench_parallel2_4(b: &mut Bencher) {
     let matrices = [generate_matrix(T4, T4), generate_matrix(T4, T4)];
     b.iter(|| vinograd_parallel2(&matrices[0], &matrices[1]));
 }
-
-

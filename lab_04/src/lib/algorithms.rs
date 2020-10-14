@@ -17,6 +17,7 @@ const NUMBER_OF_THREADS1: usize = 8;
 const NUMBER_OF_THREADS2: usize = 8;
 
 pub mod utils;
+use utils::odd_mult_sync;
 
 fn get_result_matrix(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> Vec<Vec<MatInner>> {
     if m1.len() == 0 || m2.len() == 0 {
