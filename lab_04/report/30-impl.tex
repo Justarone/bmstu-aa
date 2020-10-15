@@ -1,0 +1,143 @@
+\chapter{Технологическая часть}
+
+В данном разделе приведены средства реализации и листинг кода.
+
+\section{Требования к ПО}
+
+К программе предъявляется ряд требований:
+\begin{itemize}
+	\item на вход подаются размеры 2 матриц, а также их элементы;
+	\item на выходе — матрица, которая является результатом умножения входных матриц.
+\end{itemize}
+
+\section{Средства реализации}
+
+В качестве языка программирования для реализации данной лабораторной работы был выбран современный компилируемый ЯП Rust \cite{rustlang}. Данный выбор обусловлен моим желанием расширить свои знания в области применения данного языка, а также тем, что данный язык предоставляет широкие возможности для написания тестов \cite{rusttest}.
+
+\section{Листинг кода}
+
+В листинге \ref{lst:simple} приведена реализация простого алгоритма Винограда. В листингах \ref{lst:parallel1} и \ref{lst:parallel2} приведены реализации параллельных алгоритмов Винограда. В листингах \ref{lst:utils} и \ref{lst:parallel_utils} приведены вспомогательные однопоточные и многопоточные функции соответственно.
+
+\begin{lstinputlisting}[
+	caption={Последовательный алгоритм Винограда},
+	label={lst:simple},
+	style={rust},
+	linerange={24-83}
+]{../src/lib/algorithms.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Параллельный алгоритм Винограда 1},
+	label={lst:parallel1},
+	style={rust},
+	linerange={3-14}
+]{../src/lib/algorithms/parallel1.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Параллельный алгоритм Винограда 2},
+	label={lst:parallel2},
+	style={rust},
+	linerange={3-15}
+]{../src/lib/algorithms/parallel2.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Вспомогательные однопоточные функции},
+	label={lst:utils},
+	style={rust},
+	linerange={6-36}
+]{../src/lib/algorithms/utils.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Вспомогательные многопоточные функции},
+	label={lst:parallel_utils},
+	style={rust},
+]{../src/lib/algorithms/parallel_utils.rs}
+\end{lstinputlisting}
+
+\section{Тестирование функций}
+
+В таблице~\ref{tabular:test_rec} приведены тесты для функций, реализующих однопоточный и многопоточный алгоритмы Винограда. Тесты пройдены успешно.
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}c@{\hspace{7mm}}}
+			\hline
+			Матрица 1 & Матрица 2 &Ожидаемый результат \\ \hline
+			\vspace{4mm}
+			$\begin{pmatrix}
+			1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			6 & 12 & 18\\
+			6 & 12 & 18\\
+			6 & 12 & 18
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & 2\\
+			1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2\\
+			1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			3 & 6\\
+			3 & 6
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			4
+			\end{pmatrix}$ \\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & -2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			-1 & 2 & 3\\
+			1 & 2 & 3\\
+			1 & 2 & 3
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			0 & 4 & 6\\
+			4 & 12 & 18\\
+			4 & 12 & 18
+			\end{pmatrix}$\\
+			\vspace{2mm}
+			\vspace{2mm}
+			$\begin{pmatrix}
+			1 & 2
+			\end{pmatrix}$ &
+			$\begin{pmatrix}
+			1 & 2
+			\end{pmatrix}$ &
+			Не могут быть перемножены\\
+		\end{tabular}
+	\end{center}
+	\caption{\label{tabular:test_rec} Тестирование функций}
+\end{table}
+
+\section*{Вывод}
+
+Правильный выбор инструментов разработки позволил эффективно реализовать алгоритмы, настроить модульное тестирование и выполнить исследовательский раздел лабораторной работы.

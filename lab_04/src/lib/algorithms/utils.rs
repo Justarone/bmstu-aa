@@ -7,7 +7,7 @@ pub fn get_result_matrix(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> Vec<Vec<
     if m1.len() == 0 || m2.len() == 0 {
         return Vec::new();
     } else if m1[0].len() != m2.len() {
-        panic!("Плохие размеры матриц!");
+        panic!("Bad matrices!");
     } else {
         vec![vec![0; m2[0].len()]; m1.len()]
     }

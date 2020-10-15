@@ -1,0 +1,98 @@
+\chapter{Исследовательская часть}
+
+\section{Технические характеристики}
+
+\begin{itemize}
+	\item Операционная система: Manjaro \cite{manjaro} Linux \cite{linux} x86\_64.
+	\item Память: 8 GiB.
+	\item Процессор: Intel® Core™ i7-8550U\cite{intel}.
+\end{itemize}
+
+Тестирование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения, окружением, а также непосредственно системой тестирования.
+
+\section{Время выполнения алгоритмов}
+
+Результаты замеров приведены в таблицах \ref{tbl:cmp} и \ref{tbl:threads}.
+На рисунке \ref{plt:cmp} приведено сравнение простого алгоритма и параллельных алгоритмах при исполнении на 8 потоках, а на рисунке \ref{plt:threads} приведен график зависимости времени работы 2 параллельных алгоритмов от кол-ва используемых потоков при перемножении матриц размера 500.
+\clearpage
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+                 & \multicolumn{3}{c|}{\bfseries Сравнение времени работы алгоритмов, с}                           \\ \cline{2-4}
+			\bfseries Размер & \bfseries Простой & \bfseries Параллельный 1 & \bfseries Параллельный 2
+			\csvreader{assets/csv/cmp.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii&\csvcoliv}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Время работы алгоритмов при различных размерах}
+	\label{tbl:cmp}
+\end{table}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[scale=1.5]
+		\begin{axis}[
+			axis lines=left,
+			xlabel=Размер,
+			ylabel={Время, с},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=size,y=simple,col sep=comma]{assets/csv/cmp.csv};
+			\addplot table[x=size,y=parall1,col sep=comma]{assets/csv/cmp.csv};
+			\addplot table[x=size,y=parall2,col sep=comma]{assets/csv/cmp.csv};
+
+			\legend{Однопоточный, Параллельный 1, Параллельный 2}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы алгоритмов от размеров квадратной матрицы}
+	\label{plt:cmp}
+\end{figure}
+
+\clearpage
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+                 & \multicolumn{2}{c|}{\bfseries Время при кол-ве потоков, с}                                           \\ \cline{2-3}
+			\bfseries Потоки & \bfseries Параллельный 1 & \bfseries Параллельный 2
+			\csvreader{assets/csv/threads.csv}{}
+			{\\\hline \csvcoli&\csvcolii&\csvcoliii}
+			\\\hline
+		\end{tabular}
+	\end{center}
+	\caption{Сравнение времени работы 2 параллельных алгоритмов при различном кол-ве потоков}
+	\label{tbl:threads}
+\end{table}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[scale=1.5]
+		\begin{axis}[
+			axis lines=left,
+            xlabel={Кол-во потоков},
+			ylabel={Время, с},
+			legend pos=north west,
+			ymajorgrids=true
+		]
+			\addplot table[x=threads,y=parall1,col sep=comma]{assets/csv/threads.csv};
+			\addplot table[x=threads,y=parall2,col sep=comma]{assets/csv/threads.csv};
+			\legend{Параллельный 1, Параллельный 2}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Зависимость времени работы параллельных алгоритмов от кол-ва потоков на квадратных матрицах размера 500}
+	\label{plt:threads}
+\end{figure}
+
+\clearpage
+
+\section*{Вывод}
+
+Наилучшее время параллельные алгоритмы показали на 8 потоках (можно заметить, что минимум времени на графике \ref{plt:threads} находится в точке 8), соответствующих количеству логических ядер ноутбука, на котором проводилось тестирование. На матрицах размеров 500 на 500 параллельные алгоритмы улучшают время однопоточной реализации примерно на $72\%$.
+Количество потоков, большее 8, в итоге немногим замедляет время необходимостью переключения между потоками, а так же большим количеством инициализаций.
