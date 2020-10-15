@@ -85,7 +85,7 @@ pub fn measure(n: usize, sizes: [usize; 3]) {
 
         let time = Instant::now();
         for i in 0..n {
-            info!("Measurement №{}", i + 1);
+            info!("Замер №{}", i + 1);
             algorithm(&m1, &m2);
         }
         let time = time.elapsed().as_nanos() as usize / n;
