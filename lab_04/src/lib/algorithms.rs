@@ -12,22 +12,14 @@ type MultFnPtr = fn(&[Vec<MatInner>], &[Vec<MatInner>]) -> Vec<Vec<MatInner>>;
 
 pub static MULTS_ARRAY: [MultFnPtr; 3] = [vinograd_simple, vinograd_parallel1, vinograd_parallel2];
 pub static MULTS_DESCRIPTIONS: [&str; 3] = ["Простое умножение", "Распараллеленное умножение 1", "Распараллеленное умножение 2"];
+//pub static MULTS_ARRAY: [MultFnPtr; 2] = [vinograd_parallel1, vinograd_parallel2];
+//pub static MULTS_DESCRIPTIONS: [&str; 2] = ["Распараллеленное умножение 1", "Распараллеленное умножение 2"];
 
 const NUMBER_OF_THREADS1: usize = 8;
 const NUMBER_OF_THREADS2: usize = 8;
 
 pub mod utils;
-use utils::odd_mult_sync;
-
-fn get_result_matrix(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> Vec<Vec<MatInner>> {
-    if m1.len() == 0 || m2.len() == 0 {
-        return Vec::new();
-    } else if m1[0].len() != m2.len() {
-        panic!("Плохие размеры матриц!");
-    } else {
-        vec![vec![0; m2[0].len()]; m1.len()]
-    }
-}
+use utils::{ odd_mult_sync, get_result_matrix };
 
 fn precompute_rows(matrix: &[Vec<MatInner>]) -> Vec<MatInner> {
     let mut res = vec![0; matrix.len()];

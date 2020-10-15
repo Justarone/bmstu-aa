@@ -3,6 +3,16 @@ use rand::Rng;
 
 const MODULAR: MatInner = 19;
 
+pub fn get_result_matrix(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> Vec<Vec<MatInner>> {
+    if m1.len() == 0 || m2.len() == 0 {
+        return Vec::new();
+    } else if m1[0].len() != m2.len() {
+        panic!("Плохие размеры матриц!");
+    } else {
+        vec![vec![0; m2[0].len()]; m1.len()]
+    }
+}
+
 fn generate_row(size: usize) -> Vec<MatInner> {
     let mut rng = rand::thread_rng();
     (0..size).map(|_| rng.gen::<MatInner>() % MODULAR).collect()
@@ -24,4 +34,3 @@ pub fn odd_mult_sync(mut matrix: Vec<Vec<MatInner>>, m1: &[Vec<MatInner>],
 
     matrix
 }
-
