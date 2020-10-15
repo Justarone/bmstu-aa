@@ -1,3 +1,5 @@
+use log::{ debug };
+
 pub type MatInner = i64;
 type MultFnPtr = fn(&[Vec<MatInner>], &[Vec<MatInner>]) -> Vec<Vec<MatInner>>;
 
@@ -89,6 +91,8 @@ fn precompute_values_fast(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> (Vec<Ma
 pub fn vinograd_mult(m1: &[Vec<MatInner>], m2: &[Vec<MatInner>]) -> Vec<Vec<MatInner>> {
     let mut matrix = get_result_matrix(m1, m2);
     let precomputed = precompute_values(m1, m2);
+
+    debug!("MH: {:?};\nMV: {:?}", precomputed.0, precomputed.1);
 
     for i in 0..matrix.len() {
         for j in 0..matrix[0].len() {
