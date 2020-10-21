@@ -37,9 +37,7 @@ pub fn precompute_rows_parallel(matrix: &[Vec<MatInner>], nofth: usize) -> Vec<M
 
         let range = (size * nofth)..matrix.len();
         let res_cpy = res.clone();
-        threads.push(
-            s.spawn(|_| precompute_rows_elementary(&matrix[range.clone()], res_cpy, range))
-        );
+        precompute_rows_elementary(&matrix[range.clone()], res_cpy, range);
 
         for th in threads {
             th.join().unwrap();
