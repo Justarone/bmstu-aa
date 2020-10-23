@@ -1,5 +1,3 @@
-mod hash_utils;
-
 const BIG_PRIME: usize = 1_000_000_009;
 const A_COEFF: usize = 263;
 
