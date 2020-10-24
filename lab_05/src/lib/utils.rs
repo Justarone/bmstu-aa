@@ -9,10 +9,10 @@ use super::task::RabinKarpTask;
 
 const DEFAULT_N: usize = 10;
 const DEFAULT_STRING_LEN: usize = 200;
-const DEFAULT_PATTERN_LEN: usize = 20;
+const DEFAULT_PATTERN_LEN: usize = 1;
 
 pub fn generate_string_of_size(size: usize) -> String {
-    (0..size).map(|_| (0x61u8 + (random::<f32>() * 22.0) as u8) as char).collect()
+    (0..size).map(|_| (30_u8 + (random::<f32>() * 22.0) as u8) as char).collect()
 }
 
 pub fn generate_data(string_len: usize, pattern_len: usize, n: usize) -> Vec<RabinKarpTask> {

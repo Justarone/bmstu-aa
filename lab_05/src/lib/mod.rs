@@ -15,22 +15,44 @@ pub fn run_tests() {
     let data = utils::generate_data(string_len, pattern_len, n);
     info!("Очередь длинной {}, длины строк - {}, длины подстрок - {}", n, string_len, pattern_len);
 
-    let conv = Conveyor3::new(data);
+    let mut conv = Conveyor3::new(data);
 
-    for res in conv {
+    let mut i = 0;
+    while let Some(res) = conv.recv() {
+        i += 1;
+        println!("Тест №{}\nСтрока   : {}\nПодстрока: {}", i, res.data.string, res.data.pattern);
         show_result(&res);
     }
 
-    println!("Конец тестов");
+    println!("КОНЕЦ ТЕСТОВ");
+
+    let mut metrics = conv.get_metrics();
+    if let Some(metrics) = metrics.take() {
+        for (i, layer) in metrics.iter().enumerate() {
+            println!("Metrics №{}", i + 1);
+            layer.print_all();
+        }
+    }
 }
 
 pub fn run_interactive() {
     let data = utils::read_data();
-    let conv = Conveyor3::new(data);
+    let mut conv = Conveyor3::new(data);
 
-    for res in conv {
+    let mut i = 0;
+    while let Some(res) = conv.recv() {
+        i += 1;
+        println!("Тест №{}\nСтрока   : {}\nПодстрока: {}", i, res.data.string, res.data.pattern);
         show_result(&res);
     }
 
-    println!("Конец тестов");
+    println!("КОНЕЦ ТЕСТОВ");
+
+    let mut metrics = conv.get_metrics();
+    if let Some(metrics) = metrics.take() {
+        for (i, layer) in metrics.iter().enumerate() {
+            println!("Metrics №{}", i + 1);
+            layer.print_all();
+        }
+    }
 }

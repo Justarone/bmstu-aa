@@ -54,8 +54,7 @@ impl RabinKarpTask {
 
         for (&c_l, &c_0) in self.data.string[pattern_len..]
             .as_bytes().iter().zip(self.data.string.as_bytes().iter()) {
-            res = (res * Self::A_COEFF) % Self::BIG_PRIME + (c_l as u8) as usize -
-                (max_mult * (c_0 as u8) as usize) % Self::BIG_PRIME;
+            res = ((res * Self::A_COEFF) % Self::BIG_PRIME + (c_l as u8) as usize).wrapping_sub((max_mult * (c_0 as u8) as usize) % Self::BIG_PRIME) % Self::BIG_PRIME;
             result.push(res);
         }
 
