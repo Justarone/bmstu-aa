@@ -1,3 +1,5 @@
+#![feature(assoc_char_funcs)]
+
 extern crate termion;
 
 use std::env;
