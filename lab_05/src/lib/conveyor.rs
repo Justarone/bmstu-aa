@@ -1,73 +1,9 @@
 use std::sync::mpsc::{ Sender, Receiver, channel };
 use std::thread;
-use std::time::{ Duration, Instant };
-use termion::{ style, color };
+use super::metrics::{ Metrics };
 
 use super::task::{ RabinKarpTask, Task3 };
 use super::additional_structs::{ RabinKarpTaskResult };
-
-#[derive(Clone)]
-enum MetricsStatus {
-    INIT,
-    WAITING,
-    WORKING,
-}
-
-#[derive(Clone)]
-pub struct Metrics {
-    status: MetricsStatus,
-    cur_time: Instant,
-    init_time: Duration,
-    time_arr: Vec<(Duration, MetricsStatus)>,
-}
-
-impl Metrics {
-    pub fn new() -> Self {
-        Self {
-            status: MetricsStatus::INIT,
-            cur_time: Instant::now(),
-            init_time: Duration::new(0, 0),
-            time_arr: Vec::new(),
-        }
-    }
-
-    fn process_checkpoint(&mut self) {
-        self.time_arr.push((self.cur_time.elapsed(), self.status.clone()));
-        self.cur_time = Instant::now();
-    }
-
-    pub fn work(&mut self) {
-        self.process_checkpoint();
-        self.status = MetricsStatus::WORKING;
-    }
-
-    pub fn wait(&mut self) {
-        self.process_checkpoint();
-        self.status = MetricsStatus::WAITING;
-    }
-
-    pub fn init(&mut self) {
-        self.status = MetricsStatus::INIT;
-    }
-
-    fn print_interval(duration: &Duration, status: &MetricsStatus) {
-        print!("{}{}", style::Bold, color::Fg(color::Black));
-        match status {
-            MetricsStatus::INIT => println!("{}INIT: {} ns{}", color::Bg(color::White),
-                                            duration.as_nanos(), style::Reset),
-            MetricsStatus::WAITING => println!("{}WAITING: {} ns{}", color::Bg(color::Red),
-                                               duration.as_nanos(), style::Reset),
-            MetricsStatus::WORKING => println!("{}WORKING: {} ns{}", color::Bg(color::Green),
-                                               duration.as_nanos(), style::Reset),
-        }
-    }
-
-    pub fn print_all(&self) {
-        for (duration, status) in self.time_arr.iter() {
-            Self::print_interval(duration, status);
-        }
-    }
-}
 
 pub struct Conveyor3 {
     output: Receiver<RabinKarpTask>,
@@ -81,45 +17,43 @@ impl Conveyor3 {
         let (part1_sender, part2_receiver): (Sender<RabinKarpTask>, Receiver<RabinKarpTask>) = channel();
         let (part2_sender, part3_receiver): (Sender<RabinKarpTask>, Receiver<RabinKarpTask>) = channel();
         let (part3_sender, task_output): (Sender<RabinKarpTask>, Receiver<RabinKarpTask>) = channel();
-        let (metrics_sender, metrics_reciever): (Sender<Metrics>, Receiver<Metrics>) = channel();
+        let (metrics1_sender, metrics_reciever): (Sender<Metrics>, Receiver<Metrics>) = channel();
 
-        let metrics1_sender = metrics_sender.clone();
+        let (metrics2_sender, metrics3_sender) = (metrics1_sender.clone(), metrics1_sender.clone());
+        let mut metrics1 = Metrics::new();
+        let (mut metrics2, mut metrics3) = (metrics1.clone(), metrics1.clone());
+
         thread::spawn(move || {
-            let mut metrics = Metrics::new();
-            metrics.wait();
+            metrics1.wait();
             for mut task in part1_receiver.iter() {
-                metrics.work();
+                metrics1.work();
                 task.part1();
-                metrics.wait(); // maybe one line down?
+                metrics1.wait(); // maybe one line down?
                 part1_sender.send(task).expect("Send task to part2");
             }
-            metrics1_sender.send(metrics).expect("Send metrics of layer to conveyor");
+            metrics1_sender.send(metrics1).expect("Send metrics of layer to conveyor");
         });
 
-        let metrics2_sender = metrics_sender.clone();
         thread::spawn(move || {
-            let mut metrics = Metrics::new();
-            metrics.wait();
+            metrics2.wait();
             for mut task in part2_receiver.iter() {
-                metrics.work();
+                metrics2.work();
                 task.part2();
-                metrics.wait(); // one line down?
+                metrics2.wait(); // one line down?
                 part2_sender.send(task).expect("Send task to part3");
             }
-            metrics2_sender.send(metrics).expect("Send metrics of layer to conveyor");
+            metrics2_sender.send(metrics2).expect("Send metrics of layer to conveyor");
         });
 
-        let metrics3_sender = metrics_sender.clone();
         thread::spawn(move || {
-            let mut metrics = Metrics::new();
-            metrics.wait();
+            metrics3.wait();
             for mut task in part3_receiver.iter() {
-                metrics.work();
+                metrics3.work();
                 task.part3();
-                metrics.wait();
+                metrics3.wait();
                 part3_sender.send(task).expect("Send task to output");
             }
-            metrics3_sender.send(metrics).expect("Send metrics of layer to conveyor");
+            metrics3_sender.send(metrics3).expect("Send metrics of layer to conveyor");
         });
 
         for task in queue {

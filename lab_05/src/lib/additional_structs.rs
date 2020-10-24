@@ -6,12 +6,12 @@ pub struct RabinKarpTaskResult {
 
 #[derive(Default, Clone, Debug)]
 pub struct StrPat {
-    pub string: String,
-    pub pattern: String,
+    pub string: Vec<char>,
+    pub pattern: Vec<char>,
 }
 
 impl StrPat {
-    pub fn new(string: String, pattern: String) -> Self {
+    pub fn new(string: Vec<char>, pattern: Vec<char>) -> Self {
         Self {
             string,
             pattern,

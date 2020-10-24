@@ -13,15 +13,15 @@ pub trait Task3<T: Default> {
 #[derive(Debug)]
 pub struct RabinKarpTask {
     data: StrPat,
-    hashes: Option<Vec<usize>>,
+    hashes: Option<Vec<u128>>,
     result: Option<Vec<usize>>,
 }
 
 impl RabinKarpTask {
-    const BIG_PRIME: usize = 1_000_000_009;
-    const A_COEFF: usize = 263;
+    const BIG_PRIME: u128 = 1_000_000_000_061;
+    const A_COEFF: u128 = 10_000_004_857;
 
-    pub fn new(string: String, pattern: String) -> Self {
+    pub fn new(string: Vec<char>, pattern: Vec<char>) -> Self {
         Self {
             data: StrPat::new(string, pattern),
             hashes: None,
@@ -29,15 +29,15 @@ impl RabinKarpTask {
         }
     }
 
-    fn hash(string: &str) -> usize {
+    fn hash(string: &[char]) -> u128 {
         let mut result = 0;
-        for &c in string.as_bytes() {
-            result = (result * Self::A_COEFF + c as usize) % Self::BIG_PRIME;
+        for &c in string.iter() {
+            result = (result * Self::A_COEFF + c as u128) % Self::BIG_PRIME;
         }
         result
     }
 
-    fn get_mult(len: usize) -> usize {
+    fn get_mult(len: usize) -> u128 {
         let mut res = 1;
         for _ in 0..len {
             res = (res * Self::A_COEFF) % Self::BIG_PRIME;
@@ -48,13 +48,13 @@ impl RabinKarpTask {
     pub fn precompute_hashes(&mut self) {
         let pattern_len = self.data.pattern.len();
         let mut result = Vec::with_capacity(self.data.string.len() - pattern_len + 1);
-        let mut res: usize = Self::hash(&self.data.string[0..pattern_len]);
+        let mut res = Self::hash(&self.data.string[0..pattern_len]);
         let max_mult = Self::get_mult(pattern_len);
         result.push(res);
 
-        for (&c_l, &c_0) in self.data.string[pattern_len..]
-            .as_bytes().iter().zip(self.data.string.as_bytes().iter()) {
-            res = ((res * Self::A_COEFF) % Self::BIG_PRIME + (c_l as u8) as usize).wrapping_sub((max_mult * (c_0 as u8) as usize) % Self::BIG_PRIME) % Self::BIG_PRIME;
+        for (&c_l, &c_0) in self.data.string[pattern_len..].iter().zip(self.data.string.iter()) {
+            res = ((res * Self::A_COEFF) % Self::BIG_PRIME + c_l as u128 + Self::BIG_PRIME -
+                (max_mult * c_0 as u128) % Self::BIG_PRIME) % Self::BIG_PRIME;
             result.push(res);
         }
 
@@ -118,3 +118,52 @@ impl Task3<RabinKarpTaskResult> for RabinKarpTask {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn empty() {
+        let mut task = RabinKarpTask::new(String::from("Dima Yacuba").chars().collect(),
+                                          String::from("Pavel").chars().collect());
+        task.run_all();
+        let result = task.result().result;
+        assert_eq!(&result, &[]);
+    }
+
+    #[test]
+    fn all() {
+        let mut task = RabinKarpTask::new(String::from("aaaaaa").chars().collect(),
+                                          String::from("aaaaaa").chars().collect());
+        task.run_all();
+        let result = task.result().result;
+        assert_eq!(&result, &[0]);
+    }
+
+    #[test]
+    fn partial_all() {
+        let mut task = RabinKarpTask::new(String::from("aaaaaaaaaaaa").chars().collect(), 
+                                          String::from("aaaaaa").chars().collect());
+        task.run_all();
+        let result = task.result().result;
+        assert_eq!(&result, &[0, 1, 2, 3, 4, 5, 6]);
+    }
+
+    #[test]
+    fn comb() {
+        let mut task = RabinKarpTask::new(String::from("aaaabaaa").chars().collect(),
+                                          String::from("aa").chars().collect());
+        task.run_all();
+        let result = task.result().result;
+        assert_eq!(&result, &[0, 1, 2, 5, 6]);
+    }
+
+    #[test]
+    fn some_one_timers() {
+        let mut task = RabinKarpTask::new(String::from("someone do something sometimes")
+                                            .chars().collect(), String::from("some").chars().collect());
+        task.run_all();
+        let result = task.result().result;
+        assert_eq!(&result, &[0, 11, 21]);
+    }
+}

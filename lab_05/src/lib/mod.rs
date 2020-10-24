@@ -4,9 +4,10 @@ mod utils;
 mod conveyor;
 mod task;
 mod additional_structs;
+mod metrics;
 
 use conveyor::Conveyor3;
-use utils::show_result;
+use utils::{ chars_to_string, show_result };
 
 pub fn run_tests() {
     let string_len = utils::get_string_len();
@@ -20,7 +21,8 @@ pub fn run_tests() {
     let mut i = 0;
     while let Some(res) = conv.recv() {
         i += 1;
-        println!("Тест №{}\nСтрока   : {}\nПодстрока: {}", i, res.data.string, res.data.pattern);
+        println!("Тест №{}\nСтрока   : {}\nПодстрока: {}", i, chars_to_string(&res.data.string),
+            chars_to_string(&res.data.pattern));
         show_result(&res);
     }
 
@@ -42,7 +44,8 @@ pub fn run_interactive() {
     let mut i = 0;
     while let Some(res) = conv.recv() {
         i += 1;
-        println!("Тест №{}\nСтрока   : {}\nПодстрока: {}", i, res.data.string, res.data.pattern);
+        println!("Тест №{}\nСтрока   : {}\nПодстрока: {}", i, chars_to_string(&res.data.string),
+            chars_to_string(&res.data.pattern));
         show_result(&res);
     }
 
