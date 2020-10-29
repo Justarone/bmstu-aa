@@ -4,7 +4,6 @@ mod utils;
 mod conveyor;
 mod task;
 mod additional_structs;
-mod metrics;
 
 use task::RabinKarpTask;
 
