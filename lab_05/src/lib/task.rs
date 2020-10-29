@@ -1,13 +1,24 @@
 use super::additional_structs::{ StrPat, RabinKarpTaskResult };
+use chrono::{ DateTime, Utc };
 
-pub trait Task3<T: Default> {
+pub const NUMBER_OF_MEASURMENTS: usize = 6;
+pub const T1_START: usize = 0;
+pub const T1_END: usize = 1;
+pub const T2_START: usize = 2;
+pub const T2_END: usize = 3;
+pub const T3_START: usize = 4;
+pub const T3_END: usize = 5;
+
+pub trait Task3<T> {
     fn part1(&mut self);
     fn part2(&mut self);
     fn part3(&mut self);
 
-    fn result(&self) -> T {
-        T::default()
-    }
+    fn run1(&mut self);
+    fn run2(&mut self);
+    fn run3(&mut self);
+
+    fn result(&self) -> T;
 }
 
 #[derive(Debug)]
@@ -15,6 +26,7 @@ pub struct RabinKarpTask {
     data: StrPat,
     hashes: Option<Vec<u128>>,
     result: Option<Vec<usize>>,
+    times: [DateTime<Utc>; NUMBER_OF_MEASURMENTS],
 }
 
 impl RabinKarpTask {
@@ -22,10 +34,12 @@ impl RabinKarpTask {
     const A_COEFF: u128 = 10_000_004_857;
 
     pub fn new(string: Vec<char>, pattern: Vec<char>) -> Self {
+        let current_time = Utc::now();
         Self {
             data: StrPat::new(string, pattern),
             hashes: None,
             result: None,
+            times: [current_time; NUMBER_OF_MEASURMENTS],
         }
     }
 
@@ -94,14 +108,32 @@ impl RabinKarpTask {
 
 impl Task3<RabinKarpTaskResult> for RabinKarpTask {
     fn part1(&mut self) {
-        self.precompute_hashes();
+        self.times[T1_START] = Utc::now();
+        self.run1();
+        self.times[T1_END] = Utc::now();
     }
 
     fn part2(&mut self) {
-        self.compare_hashes();
+        self.times[T2_START] = Utc::now();
+        self.run2();
+        self.times[T2_END] = Utc::now();
     }
 
     fn part3(&mut self) {
+        self.times[T3_START] = Utc::now();
+        self.run3();
+        self.times[T3_END] = Utc::now();
+    }
+
+    fn run1(&mut self) {
+        self.precompute_hashes();
+    }
+
+    fn run2(&mut self) {
+        self.compare_hashes();
+    }
+
+    fn run3(&mut self) {
         self.compare_patterns();
     }
 
@@ -114,6 +146,7 @@ impl Task3<RabinKarpTaskResult> for RabinKarpTask {
         RabinKarpTaskResult {
             data: self.data.clone(),
             result,
+            times: self.times.clone()
         }
     }
 }

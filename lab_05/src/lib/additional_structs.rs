@@ -1,7 +1,11 @@
-#[derive(Default, Debug)]
+use super::task::{ NUMBER_OF_MEASURMENTS };
+use chrono::{ DateTime, Utc };
+
+#[derive(Debug)]
 pub struct RabinKarpTaskResult {
     pub data: StrPat,
     pub result: Vec<usize>,
+    pub times: [DateTime<Utc>; NUMBER_OF_MEASURMENTS],
 }
 
 #[derive(Default, Clone, Debug)]
