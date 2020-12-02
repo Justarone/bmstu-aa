@@ -18,3 +18,5 @@ Cargo.lock
 *.bbl
 *.ind
 *.blg
+*.fls
+*.fdb_latexmk
