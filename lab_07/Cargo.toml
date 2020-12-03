@@ -1,0 +1,13 @@
+[package]
+name = "lab_07"
+version = "0.1.0"
+authors = ["Perestoronin Pavel <p_perestoronin@mail.ru>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = "1.0.117"
+serde_derive = "1.0.117"
+csv="1.1.5"
+num-format="0.4.0"
