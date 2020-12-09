@@ -40,6 +40,24 @@
 ]{../src/lib/additional_structs.rs}
 \end{lstinputlisting}
 
+\section{Тестирование функций.}
+
+В таблице \ref{tab:tests} представлены данные для тестирования. Все тесты пройдены успешно.
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c@{\hspace{7mm}}|c@{\hspace{7mm}}|c@{\hspace{7mm}}|c@{\hspace{7mm}}|}
+            \hline
+            Строка & Подстрока & Ожидаемый результат & Результат \\
+            \hline
+            ``ааааааа'' & ``аааа'' & $[0, 1, 2, 3]$ & $[0, 1, 2, 3]$ \\
+            ``aaaabaaaa'' & ``aaa'' & $[0, 1, 5, 6]$ & $[0, 1, 5, 6]$ \\
+            ``aaaaaaaaaa'' & ``b'' & $[]$ & $[]$ \\
+            \hline
+		\end{tabular}
+	\end{center}
+	\caption{\label{tab:tests} Тестирование функций.}
+\end{table}
 
 \section*{Вывод}
 
