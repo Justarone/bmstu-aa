@@ -1,0 +1,110 @@
+\chapter{Исследовательская часть}
+
+В данном разделе приведены примеры работы программы и анализ характериситик разработанного программного обеспечения.
+
+\section{Технические характеристики}
+
+\begin{itemize}
+    \item Операционная система: Manjaro \cite{manjaro} Linux \cite{linux} x86\_64.
+    \item Память: 8 ГБ.
+    \item Процессор: Intel® Core™ i7-8550U\cite{intel}.
+\end{itemize}
+
+Тестирование проводилось на ноутбуке, включенном в сеть электропитания. Во время тестирования ноутбук был нагружен только встроенными приложениями окружения, окружением, а также непосредственно системой тестирования.
+
+\section{Замеры и исследование результатов.}
+
+Тестирование проводилось на 2 наборах для каждого алгоритма и каждого количества подборов. Первый набор включал в себя исключительно ключи, которые есть в словаре, причём данные ключи перебираются итеративно, что имитирует равновозможность выпадения ключа (в тестовом наборе 2409 ключей, таким образом для 10.000.000 подборов каждый ключ берется $\approx 4151$ раз). Второй набор включал исключительно отсутствующие в словаре ключи, что позволяло проверить, насколько быстро алгоритмы поиска способны обнаружить тот факт, что ключа нет среди имеющихся.
+
+В таблицах \ref{tbl:brute}, \ref{tbl:binary} и \ref{tbl:segment} представлены времена работы полного перебора, двоичного поиска и сегментированного алгоритмов. В таблице представлены значения:
+\begin{itemize}
+    \item количество раз, которое производился поиск (Кол-во);
+    \item суммарное время поиска только присутствующих ключей (ВППК; в нс);
+    \item суммарное время поиска только отсутствующих ключей (ВППК; в нс).
+\end{itemize}
+
+Примечание: для сегментированного алгоритма было выбрано деление на 5 сегментов.
+
+\clearpage
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Кол-во & ВППК & ВПОК
+            \csvreader{assets/csv/brute.csv}{}
+            {\\\hline \csvcoli&\csvcolii&\csvcoliii}
+            \\\hline
+        \end{tabular}
+    \end{center}
+    \caption{Время работы полного перебора.}
+    \label{tbl:brute}
+\end{table}
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Кол-во & ВППК & ВПОК
+            \csvreader{assets/csv/binary.csv}{}
+            {\\\hline \csvcoli&\csvcolii&\csvcoliii}
+            \\\hline
+        \end{tabular}
+    \end{center}
+    \caption{Время работы двоичного поиска.}
+    \label{tbl:binary}
+\end{table}
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Кол-во & ВППК & ВПОК
+            \csvreader{assets/csv/segment.csv}{}
+            {\\\hline \csvcoli&\csvcolii&\csvcoliii}
+            \\\hline
+        \end{tabular}
+    \end{center}
+    \caption{Время работы сегментированного алгоритма с частотным анализом.}
+    \label{tbl:segment}
+\end{table}
+
+На графике \ref{plt:time} построены графики зависимости времени от количества подборов из словаря для алгоритмов поиска (для данных из таблиц \ref{tbl:brute}, \ref{tbl:binary} и \ref{tbl:segment}):
+\begin{itemize}
+    \item полного перебора при запросе только присутствующих ключей (BruteGood);
+    \item полного перебора при запросе только отсутствующих ключей (BruteBad);
+    \item бинарного при запросе только присутствующих ключей (BinaryGood);
+    \item бинарного при запросе только отсутствующих ключей (BinaryBad);
+    \item сегментированного с частотным анализом при запросе только присутствующих ключей (SegmentGood);
+    \item сегментированного с частотным анализом при запросе только отсутствующих ключей (SegmentBad).
+\end{itemize}
+
+
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                axis lines=left,
+                xlabel=Количество подборов,
+                legend pos=north west,
+                ylabel={Время, нс},
+                ymajorgrids=true]
+            \addplot table[x=amount,y=good,col sep=comma] {assets/csv/brute.csv};
+            \addplot table[x=amount,y=bad,col sep=comma] {assets/csv/brute.csv};
+            \addplot table[x=amount,y=good,col sep=comma] {assets/csv/binary.csv};
+            \addplot table[x=amount,y=bad,col sep=comma] {assets/csv/binary.csv};
+            \addplot table[x=amount,y=good,col sep=comma] {assets/csv/segment.csv};
+            \addplot table[x=amount,y=bad,col sep=comma] {assets/csv/segment.csv};
+            \legend{BruteGood, BruteBad, BinaryGood, BinaryBad, SegmentGood, SegmentBad}
+        \end{axis}
+    \end{tikzpicture}
+    \captionsetup{justification=centering}
+    \caption{Сравнение алгоритмов.}
+    \label{plt:time}
+\end{figure}
+
+
+\section*{Вывод}
+
+Алгоритм полного перебора оказался самым медленным, при 10.000.000 элементах и поиске только присутствующих ключей среднее время поиска $\approx 34.121$ мкс, в то время как среднее время поиска сегментированного алгоритма на тех же данных составило $\approx 0.406$ мкс, что приблизительно равно времени бинарного поиска $\approx 0.405$ мкс, который оказался менее чем на 1\% быстрее. При том же наборе, но поиске только отсутствующих ключей полный перебор работает медленнее на $\approx 35.474$ мкс (что составляет примерно 4\%), в то время как времена сегментированного алгоритма ($\approx 0.408$) и бинарного поиска ($\approx 0.406$), также ухудшились, но менее, чем на 1\%.
