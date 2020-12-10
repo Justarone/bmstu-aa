@@ -2,9 +2,18 @@ use super::*;
 
 fn check<T: Map<String, String>>(f: fn(Vec<DictEntry<String, String>>) -> T) {
     let map = f(vec![
-        DictEntry { key: String::from("k1"), value: String::from("val1") },
-        DictEntry { key: String::from("k2"), value: String::from("val2") },
-        DictEntry { key: String::from("k4"), value: String::from("val4") },
+        DictEntry {
+            key: String::from("k1"),
+            value: String::from("val1"),
+        },
+        DictEntry {
+            key: String::from("k2"),
+            value: String::from("val2"),
+        },
+        DictEntry {
+            key: String::from("k4"),
+            value: String::from("val4"),
+        },
     ]);
 
     assert_eq!(map.get(&String::from("k0")), None);

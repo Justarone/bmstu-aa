@@ -1,12 +1,11 @@
-use std::cmp::{Ord, Ordering};
 use serde_derive::Deserialize;
+use std::cmp::{Ord, Ordering};
 
 pub type Id = usize;
 pub type Name = String;
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct DictEntry<K: Ord, V: Clone>
-{
+pub struct DictEntry<K: Ord, V: Clone> {
     pub key: K,
     pub value: V,
 }
@@ -28,7 +27,10 @@ impl<K: Ord, V: Clone> From<Vec<DictEntry<K, V>>> for BruteMap<K, V> {
 
 impl<K: Ord, V: Clone> Map<K, V> for BruteMap<K, V> {
     fn get(&self, key: &K) -> Option<V> {
-        self.data.iter().find(|&e| e.key == *key).map(|entry| entry.value.clone())
+        self.data
+            .iter()
+            .find(|&e| e.key == *key)
+            .map(|entry| entry.value.clone())
     }
 }
 
@@ -81,7 +83,10 @@ where
         let inner = match self.data.iter().position(|e| e.key == seg_key) {
             Some(p) => &mut self.data[p].value,
             None => {
-                self.data.push(DictEntry { key: seg_key, value: Vec::new() });
+                self.data.push(DictEntry {
+                    key: seg_key,
+                    value: Vec::new(),
+                });
                 let index = self.data.len() - 1;
                 &mut self.data[index].value
             }
@@ -90,7 +95,10 @@ where
     }
 
     pub fn from(source: Vec<DictEntry<K, V>>, f: fn(&K) -> G) -> SegmentMap<G, K, V> {
-        let mut m = SegmentMap { f, data: Vec::new() };
+        let mut m = SegmentMap {
+            f,
+            data: Vec::new(),
+        };
         for e in source {
             m.put(e);
         }
