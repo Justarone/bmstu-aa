@@ -1,5 +1,5 @@
+use super::ant_solver::Config;
 use super::constants;
-use super::solvers::Config;
 use std::fs::File;
 use std::io::prelude::*;
 

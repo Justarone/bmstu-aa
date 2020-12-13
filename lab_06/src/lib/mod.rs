@@ -1,8 +1,10 @@
+mod ant_solver;
+mod brute_solver;
 mod constants;
-mod solvers;
 mod utils;
 
-use solvers::{AntSolver, BruteSolver};
+use ant_solver::AntSolver;
+use brute_solver::BruteSolver;
 use utils::{read_config, read_data};
 
 pub fn run() {

@@ -1,139 +1,15 @@
-use itertools::Itertools;
 use rand::prelude::*;
-use serde_derive::Deserialize;
 
-pub struct BruteSolver<'a> {
-    data: &'a [Vec<f64>],
-}
+mod config;
+pub use config::Config;
 
-impl<'a> BruteSolver<'a> {
-    pub fn new(data: &'a [Vec<f64>]) -> Self {
-        Self { data }
-    }
-
-    pub fn solve(&self) -> (f64, Vec<usize>) {
-        let (mut best_l, mut best_t) = (f64::MAX, Vec::new());
-        for permutation in (1..self.data.len()).permutations(self.data.len() - 1) {
-            let l = self.compute_dist(&permutation);
-            if l < best_l {
-                best_l = l;
-                best_t = permutation;
-            }
-        }
-        best_t.insert(0, 0);
-        best_t.push(0);
-        (best_l, best_t)
-    }
-
-    fn compute_dist(&self, t: &[usize]) -> f64 {
-        match t.len() {
-            0 => 0.0,
-            1 => 2_f64 * self.data[0][t[0]],
-            _ => {
-                self.data[0][t[0]]
-                    + t.windows(2)
-                        .fold(0_f64, |acc, el| acc + self.data[el[0]][el[1]])
-                    + self.data[t[t.len() - 1]][0]
-            }
-        }
-    }
-}
-
-#[derive(Deserialize)]
-pub struct Config {
-    alpha: f64,
-    beta: f64,
-    e: usize, // number of elite ants
-    p: f64,   // evaporation rate \in [0..1]
-    m: usize, // number of ants
-    tmax: usize,
-    pheromon_start: f64,
-    pheromon_min: f64,
-}
+mod ant;
+use ant::Ant;
 
 pub struct AntSolver {
     ndata: Vec<Vec<f64>>,
     q: f64,
     config: Config,
-}
-
-#[derive(Clone)]
-struct Ant {
-    route: Vec<usize>,
-    len: f64,
-    left: Vec<usize>,
-}
-
-impl Ant {
-    fn new(cities_amount: usize, start: usize) -> Self {
-        Self {
-            route: vec![start],
-            len: 0_f64,
-            left: (0..cities_amount).filter(|&e| e != start).collect(),
-        }
-    }
-
-    fn walk(
-        &mut self,
-        nd: &[Vec<f64>],
-        pd: &[Vec<f64>],
-        alpha: f64,
-        beta: f64,
-        rng: &mut ThreadRng,
-    ) {
-        for _ in 0..self.left.len() {
-            self.next(nd, pd, alpha, beta, rng);
-        }
-        let last_visited = self.route[self.route.len() - 1];
-        self.len += 1.0 / nd[last_visited][self.route[0]];
-    }
-
-    #[allow(dead_code)]
-    fn len(&self) -> f64 {
-        self.len
-    }
-
-    #[allow(dead_code)]
-    fn reset(&mut self) {
-        self.len = 0.0;
-        self.left = self.route.clone();
-        let start = self.route[0];
-        self.route = vec![start];
-    }
-
-    fn data(&self) -> (f64, &[usize]) {
-        (self.len, &self.route)
-    }
-
-    fn next(
-        &mut self,
-        nd: &[Vec<f64>],
-        pd: &[Vec<f64>],
-        alpha: f64,
-        beta: f64,
-        rng: &mut ThreadRng,
-    ) {
-        let cur = self.route[self.route.len() - 1];
-        let denominator = self.left.iter().fold(0.0, |acc, &e| {
-            acc + f64::powf(pd[cur][e], alpha) * f64::powf(nd[cur][e], beta)
-        });
-        let mut pick: f64 = rng.gen();
-        for (index, &j) in self.left.iter().enumerate() {
-            let cur_prob = f64::powf(pd[cur][j], alpha) * f64::powf(nd[cur][j], beta);
-            pick -= cur_prob / denominator;
-            if pick < 0_f64 {
-                self.pick(index, 1.0 / nd[cur][j]);
-                return;
-            }
-        }
-        let index = self.left.len() - 1;
-        self.pick(index, 1.0 / nd[cur][self.left[index]]);
-    }
-
-    fn pick(&mut self, index: usize, diff: f64) {
-        self.route.push(self.left.remove(index));
-        self.len += diff;
-    }
 }
 
 impl AntSolver {
