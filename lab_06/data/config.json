@@ -5,6 +5,6 @@
     "p": 0.1,
     "m": 8,
     "tmax": 10,
-    "pheromon_start": 2.0,
-    "pheromon_min": 0.2 
+    "pheromon_start": 1.0,
+    "pheromon_min": 0.1 
 }
