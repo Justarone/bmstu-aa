@@ -56,10 +56,7 @@ impl<'a> AntSolver<'a> {
             // Find best T* and L* after day
             let best_data = ants
                 .iter()
-                .max_by(|a, b| match a.data().0 < b.data().0 {
-                    true => std::cmp::Ordering::Less,
-                    _ => std::cmp::Ordering::Greater,
-                })
+                .min_by(|a, b| a.data().0.cmp(&b.data().0))
                 .unwrap()
                 .data();
             if best_data.0 < best_l {

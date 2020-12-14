@@ -3,17 +3,18 @@ use rand::prelude::*;
 
 #[derive(Clone)]
 pub struct Ant {
-    route: Vec<usize>,
+    pub route: Vec<usize>,
     len: Cost,
     left: Vec<usize>,
 }
 
 impl Ant {
     pub fn new(cities_amount: usize, start: usize) -> Self {
+        let left: Vec<usize> = (0..cities_amount).filter(|&e| e != start).collect();
         Self {
             route: vec![start],
             len: 0 as Cost,
-            left: (0..cities_amount).filter(|&e| e != start).collect(),
+            left,
         }
     }
 
