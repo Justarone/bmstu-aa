@@ -1,0 +1,85 @@
+\chapter{Технологическая часть}
+
+В данном разделе приведены средства программной реализации и листинг кода.
+
+\section{Требования к ПО}
+
+К программе предъявляется ряд требований:
+\begin{itemize}
+    \item на вход подаётся матрица смежности графа;
+    \item на выходе программа выдаёт минимальную длину и путь, на котором данная длина достигнута.
+\end{itemize}
+
+\section{Средства реализации}
+
+В качестве языка программирования для реализации данной лабораторной работы был выбран современный компилируемый ЯП Rust \cite{rustlang}. Данный выбор обусловлен популярностью языка и скоростью его выполнения, а также тем, что данный язык предоставляет широкие возможности для написания тестов \cite{rusttest}.
+
+\section{Листинги кода}
+
+В листинге \ref{lst:brute} представлена реализация алгоритма полного перебора, в листинге \ref{lst:antsolver} представлена реализация муравьиного алгоритма. В листингах \ref{lst:config} и \ref{lst:ant} представлены конфигурационная структура и структура муравья с методами соотвественно.
+
+\begin{lstinputlisting}[
+        caption={Реализация полного перебора.},
+        label={lst:brute},
+        style={rust}
+    ]{../src/lib/brute_solver.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+        caption={Реализация муравьиного алгоритма.},
+        label={lst:antsolver},
+        style={rust}
+    ]{../src/lib/ant_solver/mod.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+        caption={Конфигурационная структура.},
+        label={lst:config},
+        style={rust}
+    ]{../src/lib/ant_solver/config.rs}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+        caption={Структура муравья и её методы.},
+        label={lst:ant},
+        style={rust}
+    ]{../src/lib/ant_solver/ant.rs}
+\end{lstinputlisting}
+
+\section{Тестирование функций.}
+
+В таблице~\ref{tab:tests} приведены тесты для функции, реализующей алгоритм для решения задачи коммивояжера. Тесты пройдены успешно.
+
+\begin{table}[h!]
+    \begin{center}
+        \caption{\label{tab:tests} Тестирование функций}
+        \begin{tabular}{|c@{\hspace{7mm}}|c@{\hspace{7mm}}|c@{\hspace{7mm}}|c@{\hspace{7mm}}|}
+            \hline
+            Матрица смежности & Ожидаемый наименьший путь \\ \hline
+            $\begin{pmatrix}
+                0 &  9 &  12 &  21\\
+                9 &  0 &  9 &  21\\
+                12 &  9 &  0 &  21\\
+                21 &  21 &  21 &  0
+            \end{pmatrix}$ &
+            60, [0, 1, 2, 3, 0]\TBstrut \\ \hline
+            $\begin{pmatrix}
+                0 &  21 &  12 &  9\\
+                21 &  0 &  12 &  15\\
+                12 &  12 &  0 &  15\\
+                9 &  15 &  15 &  0
+            \end{pmatrix}$ &
+            48, [0, 2, 1, 3, 0]\TBstrut \\ \hline
+            $\begin{pmatrix}
+                0 &  24 &  27 &  21\\
+                24 &  0 &  12 &  12\\
+                27 &  12 &  0 &  6\\
+                21 &  12 &  7 &  0
+            \end{pmatrix}$ &
+            63, [0, 1, 2, 3, 0]\TBstrut \\ \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\section*{Вывод}
+Спроектированные алгоритмы были реализованы и протестированы.
