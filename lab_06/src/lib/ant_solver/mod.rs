@@ -90,13 +90,10 @@ impl<'a> AntSolver<'a> {
 
     fn generate_ants(&self, rng: &mut ThreadRng) -> Vec<Ant> {
         let (m, data_len) = (self.config.m, self.data.len());
-        let mut ants = (0..(m - (m % data_len)))
-            .map(|start| Ant::new(data_len, start % data_len))
-            .collect::<Vec<Ant>>();
-        let more_ants = (0..(m % data_len))
+        // placing ants in all places works worse
+        let ants = (0..m)
             .map(|_| Ant::new(data_len, rng.gen_range(0, data_len)))
             .collect::<Vec<Ant>>();
-        ants.extend_from_slice(&more_ants);
         ants
     }
 
