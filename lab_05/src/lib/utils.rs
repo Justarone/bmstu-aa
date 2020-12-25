@@ -1,13 +1,13 @@
+use chrono::{DateTime, Utc};
+use log::debug;
+use rand::{thread_rng, Rng};
 use std::env;
 use std::io::prelude::*;
-use termion::{ color, style };
-use rand::{ Rng, thread_rng };
-use chrono::{ DateTime, Utc };
-use log::{ debug };
+use termion::{color, style};
 
-use super::task::{ NUMBER_OF_MEASURMENTS };
 use super::additional_structs::StrPat;
 use super::task::RabinKarpTask;
+use super::task::NUMBER_OF_MEASURMENTS;
 
 const DEFAULT_N: usize = 10;
 const DEFAULT_STRING_LEN: usize = 200000;
@@ -17,7 +17,8 @@ const FROM: usize = 0;
 
 pub fn generate_string_of_size(size: usize) -> Vec<char> {
     let mut rng = thread_rng();
-    (0..size).map(|_| rng.gen_range(FROM, FROM + RANGE))
+    (0..size)
+        .map(|_| rng.gen_range(FROM, FROM + RANGE))
         .map(|uint| if uint == FROM { 'a' } else { 'b' })
         .collect::<Vec<char>>()
 }
@@ -26,9 +27,18 @@ pub fn generate_data() -> Vec<RabinKarpTask> {
     let string_len = get_string_len();
     let pattern_len = get_pattern_len();
     let n = get_n();
-    println!("Queue length: {}, String length: {}, Pattern length: {}", n, string_len, pattern_len);
-    (0..n).map(|_| RabinKarpTask::new(generate_string_of_size(string_len),
-        generate_string_of_size(pattern_len))).collect()
+    println!(
+        "Queue length: {}, String length: {}, Pattern length: {}",
+        n, string_len, pattern_len
+    );
+    (0..n)
+        .map(|_| {
+            RabinKarpTask::new(
+                generate_string_of_size(string_len),
+                generate_string_of_size(pattern_len),
+            )
+        })
+        .collect()
 }
 
 pub fn read_data() -> Vec<RabinKarpTask> {
@@ -41,18 +51,28 @@ pub fn read_data() -> Vec<RabinKarpTask> {
     let mut result = Vec::with_capacity(n);
     for i in 0..n {
         let mut string = String::new();
-        print!("Введите {} строку, в которой будет происходить поиск подстроки: ", i + 1);
+        print!(
+            "Введите {} строку, в которой будет происходить поиск подстроки: ",
+            i + 1
+        );
         std::io::stdout().flush().expect("Can't flush stdout");
-        std::io::stdin().read_line(&mut string).expect("Read string");
+        std::io::stdin()
+            .read_line(&mut string)
+            .expect("Read string");
         string.pop();
 
         let mut pattern = String::new();
         print!("Введите {} подстроку для поиска в строке: ", i + 1);
         std::io::stdout().flush().expect("Can't flush stdout");
-        std::io::stdin().read_line(&mut pattern).expect("Read string");
+        std::io::stdin()
+            .read_line(&mut pattern)
+            .expect("Read string");
         pattern.pop();
 
-        result.push(RabinKarpTask::new(string.chars().collect(), pattern.chars().collect()));
+        result.push(RabinKarpTask::new(
+            string.chars().collect(),
+            pattern.chars().collect(),
+        ));
         println!("");
     }
 
@@ -64,8 +84,15 @@ pub fn show_result(result: &[usize], data: &StrPat) {
     let text = &data.string;
 
     for &pos in result {
-        debug!("{}{}{}{}{}{}", chars_to_string(&text[0..pos]), color::Bg(color::Green), style::Bold,
-            chars_to_string(&text[pos..(pos + patlen)]), style::Reset, chars_to_string(&text[(pos + patlen)..]));
+        debug!(
+            "{}{}{}{}{}{}",
+            chars_to_string(&text[0..pos]),
+            color::Bg(color::Green),
+            style::Bold,
+            chars_to_string(&text[pos..(pos + patlen)]),
+            style::Reset,
+            chars_to_string(&text[(pos + patlen)..])
+        );
     }
 }
 
@@ -98,11 +125,14 @@ pub fn chars_to_string(arr: &[char]) -> String {
 }
 
 enum Part {
-    Part1, Part2, Part3,
+    Part1,
+    Part2,
+    Part3,
 }
 
 enum EventType {
-    Start, End,
+    Start,
+    End,
 }
 
 struct Event {
@@ -127,20 +157,30 @@ impl Event {
                 0 => EventType::Start,
                 1 => EventType::End,
                 _ => unreachable!("only 2 types of events"),
-            }
+            },
         }
     }
 }
 
 fn print_task_number(number: usize) {
-    print!("{}{}{} Task №{:<3} {}", style::Bold, color::Bg(color::White),
-        color::Fg(color::Black), number + 1, style::Reset);
+    print!(
+        "{}{}{} Task №{:<3} {}",
+        style::Bold,
+        color::Bg(color::White),
+        color::Fg(color::Black),
+        number + 1,
+        style::Reset
+    );
 }
 
 fn print_event_part(part: Part) {
     print!("{}", style::Bold);
     match part {
-        Part::Part1 => print!("{}{} Part 1 ", color::Bg(color::Yellow), color::Fg(color::Black)),
+        Part::Part1 => print!(
+            "{}{} Part 1 ",
+            color::Bg(color::Yellow),
+            color::Fg(color::Black)
+        ),
         Part::Part2 => print!("{} Part 2 ", color::Bg(color::Cyan)),
         Part::Part3 => print!("{} Part 3 ", color::Bg(color::Magenta)),
     }
@@ -157,7 +197,13 @@ fn print_event_type(event_type: EventType) {
 }
 
 fn print_event_timestamp(timestamp: DateTime<Utc>) {
-    print!("{}{} {} {}", style::Bold, color::Bg(color::Blue), timestamp, style::Reset);
+    print!(
+        "{}{} {} {}",
+        style::Bold,
+        color::Bg(color::Blue),
+        timestamp,
+        style::Reset
+    );
 }
 
 fn print_sorted_events(events: Vec<Event>) {
